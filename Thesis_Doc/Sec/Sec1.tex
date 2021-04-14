@@ -1,0 +1,72 @@
+\documentclass{article}
+\usepackage{knitr}
+\newcommand{\SweaveOpts}[1]{}  % do not interfere with LaTeX
+\newcommand{\SweaveInput}[1]{} % because they are not real TeX commands
+\newcommand{\Sexpr}[1]{}       % will only be parsed by R
+
+
+\usepackage[utf8]{inputenc}
+\usepackage[left=1in, right=1in, top=1in, bottom=1in]{geometry}
+\usepackage{lipsum}
+\usepackage{titling}
+\usepackage{amsmath}
+\usepackage{fancyhdr}
+\usepackage{setspace}
+\usepackage{framed} 
+\pagestyle{fancy}
+\usepackage{amsmath, amsthm, amssymb, amsfonts, mathtools, xfrac, mathrsfs, tikz}
+\usepackage{enumerate}
+\usepackage{graphicx,dsfont, float}
+\usepackage{braket, bm}
+\usepackage{bbold}
+\usepackage{setspace}
+
+\usepackage{titlesec}
+
+
+\renewcommand{\thesection}{\Roman{section}} 
+\renewcommand{\thesubsection}{\thesection.\Roman{subsection}}
+
+\titleformat{\section}
+  {\large\center\bfseries}{\thesection.}{.5em}{}
+\titlespacing{\section}{0em}{.5em}{.5em}
+\titleformat{\subsection}
+  {\normalsize\center\itshape}{}{0em}{}
+\titlespacing{\subsection}{0em}{.5em}{.5em}
+
+\usepackage{natbib}
+\bibliographystyle{abbrvnat}
+\setcitestyle{authoryear,open={(},close={)}}
+
+\title{Teacher Grading and Value-Added:
+\\Evidence from Chicago}
+\author{Roy McKenzie}
+
+\lhead{}
+
+
+
+
+\begin{document}
+% !Rnw weave = knitr
+
+
+
+\doublespacing
+\section{Introduction}
+
+Grades represent one of the most widely used methods for evaluating student achievement in K-12 education. Not only are they a near constantly considered outcome in K-12 schools, prior research has shown that GPA is a powerful predictor of long-term student success (\citealt{allensworthHighSchoolGPAs2020, eastonPredictivePowerNinthGrade2017}). Nevertheless, there remains tension around the use of grades as a key metric by which to evaluate student achievement, with some education professionals and policymakers concerned that grading practices and the standards of success could vary wildly between teachers or schools (\citealt{gershensonGradeInflationHigh2018}). If true, then grades are an at-best unreliable indicator of student learning, and caution should be exercised in the use of grades as an evaluative tool. 
+
+Due to this tension, there is great policy relevance in understanding the extent that observed variation in student grades consists of variation in teacher grading practices, which are not themselves related to student learning. If this effect can be identified and controlled for, it could increase the reliability of students' grades as both a measure of achievement and a predictor of long-term success. The challenge arises, however, is parsing the extent to which this grading effect is truly idiosyncratic, and the extent to which it captures other non-observable determinants of student achievement (such as attitude or engagement) which themselves go beyond mastery of the content. 
+
+The setting of Chicago Public Schools (CPS) provides the perfect setting in which to explore these questions. With more than 20,000 teachers and 350,000 students, distributed over 500 schools, CPS provides a setting of both adequate variation among schools, teachers, and students, within a homogeneous district-wide setting to allow for productive empirical analysis. In a previous analysis, \cite{allensworthWhyStudentsGet2018} found that even after adding numerous controls for observable determinants of student grades, a significant portion of between-teacher grading variation remained. The richness and size of the data allow us to estimate and quasi-experimentally evaluate a structural model of teacher grading practices, allowing for the underlying causes of this remaining variation to be examined in a new light. 
+
+In the initial step of the analysis, I develop a strategy to identify the idiosyncratic grading practices of individual teachers. Specifically, I develop a theoretical argument to identify the \textit{teacher grading effect}, as the component of a teacher's students' grades that is not linked to increases in human capital. An important note: this argument does not explain the reasons for the existence of this effect, nor does it try. This could either be ``grade inflation'' in the colloquial sense, or it could be related to other aspects of the student-teacher relationship which, while not connected with the actual learning of the material, could still very much be due to circumstances within the classroom. 
+
+I next provide a statistical methodology to estimate these effects using longitudinal CPS data, using a sample of CPS freshman from school years 2010-2011 to 2013-2014. For every core (mathematics, science, social studies, or readings) teacher in this sample, I then calculate their individual teacher grading effect using a variety of both fixed- and mixed-effects models, following OLS and empirical Bayes procedures respectively to generate numerical estimates of these scores. I then use these estimates in a variety of model specifications to analyze the impact that variation in teacher grading effects has on later high school GPA, high school graduation, college enrollment, and college graduation, using a variety of independent variables derived from the teacher grading effect estimates. These include the average teacher grading effect in core courses during a student's freshman year, relative measures of the teacher grading effect of a student's freshman year teachers as compared to their within-school peers, and indicators of whether or not a student had an unusually high positive or negative grading effect teacher at any point during their freshman year.
+
+Building on \cite{gilraineMakingTeachingLast2020}, my identification argument for the teacher grading effects rests on three primary assumptions: (1) random assignment of teachers in freshman year, (2) random assignment of teachers in sophomore year, and (3) a functional assumption on the human capital accumulation process. Thus, in addition to my primary analysis, I also conduct several tests to attempt to provide additional evidence for each of these assumptions. For the random assignment assumption, I run a panel of balance tests on observable teacher and student characteristics for both freshman and sophomore year teachers to attempt to identify any sorting based on student or prior teacher characteristics. For the functional form assumption, I run a specification test examining the degree to which my results are robust to variation in the depreciation of human capital. Finally, to test the overall validity of the theoretic framework, I also run a ``movers'' design - effectively an event study on teacher switching within CPS - to examine the extent to which estimated teacher grading effects can predict real changes in student grades under quasi-experimental variation. 
+
+The structure of the paper is as follows. In Section \ref{section:lit}, I detail the relevant literature to our analysis. In Section \ref{section:framework}, I present both the theoretical and statistical framework for the primary analyses. In Section \ref{section:data}, I detail the data used for the analysis and the construction of the analytic sample. In Section V (forthcoming), I detail the results of the primary analyses, and in Section VI (forthcoming), I highlight the results of the empirical tests on the assumptions. Finally, Section VII (forthcoming) concludes the paper. 
+\bibliographystyle{abbrvnat}
+\end{document}

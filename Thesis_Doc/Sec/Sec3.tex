@@ -1,0 +1,176 @@
+\documentclass{article}
+\usepackage{knitr}
+\newcommand{\SweaveOpts}[1]{}  % do not interfere with LaTeX
+\newcommand{\SweaveInput}[1]{} % because they are not real TeX commands
+\newcommand{\Sexpr}[1]{}       % will only be parsed by R
+
+
+\usepackage[utf8]{inputenc}
+\usepackage[left=1in, right=1in, top=1in, bottom=1in]{geometry}
+\usepackage{lipsum}
+\usepackage{titling}
+\usepackage{amsmath}
+\usepackage{fancyhdr}
+\usepackage{setspace}
+\usepackage{framed} 
+\pagestyle{fancy}
+\usepackage{amsmath, amsthm, amssymb, amsfonts, mathtools, xfrac, mathrsfs, tikz}
+\usepackage{enumerate}
+\usepackage{graphicx,dsfont, float}
+\usepackage{braket, bm}
+\usepackage{bbold}
+\usepackage{setspace}
+
+\usepackage{titlesec}
+
+
+\renewcommand{\thesection}{\Roman{section}} 
+\renewcommand{\thesubsection}{\thesection.\Roman{subsection}}
+
+\titleformat{\section}
+  {\large\center\bfseries}{\thesection.}{.5em}{}
+\titlespacing{\section}{0em}{.5em}{.5em}
+\titleformat{\subsection}
+  {\normalsize\center\itshape}{}{0em}{}
+\titlespacing{\subsection}{0em}{.5em}{.5em}
+
+\usepackage{natbib}
+\bibliographystyle{abbrvnat}
+\setcitestyle{authoryear,open={(},close={)}}
+
+\title{Teacher Grading and Value-Added:
+\\Evidence from Chicago}
+\author{Roy McKenzie}
+
+\lhead{}
+
+
+
+
+\begin{document}
+
+
+\doublespacing
+\section{Conceptual and Statistical Framework}
+\label{section:framework}
+
+In the following section, we provide both a theoretical and an empirical framework for decomposing student grades into temporary teacher grading effects versus lasting gains in student achievement. 
+
+\subsection{Teacher Grading Effect Estimation - Theoretical Framework}
+
+Here we present a simple, structural model of human capital accumulation and teacher grading. Let $j(it)$ represent the teacher assigned to student $i$ in period $t$. This teacher teaches one class per year, and the set of available teachers in each period is disjoint.
+
+As the start of period $t$, student $i$'s level of human capital is given by $h_{i,t-1}$. After period $t$, student $i$'s level of human capital has evolved to $h_{it}$. We make the following structural assumption:
+
+\bigskip 
+\noindent\fbox{%
+	\parbox{\textwidth}{%
+		\textbf{Assumption 1 (Additivity):} Assume the law of motion for human capital has a form given by 
+			\[
+				h_{it} = h_{i,t-1} + \gamma_{j(it)} 
+			\]
+		where $\gamma_{j(it)}$ is teacher $j(it)$'s ``value-added'' effect on student learning. 
+	}%
+}\\
+
+% NOTE: Here we are ALSO (subtly) assuming that value added is constant for a given teacher. 
+
+\noindent After the student's human capital is augmented, they are then assigned a grade based on two factors:
+\begin{itemize}
+	\item The amount of human capital at the end of the period, $h_{it}$
+	\item Teacher $j(it)$'s idiosyncratic teacher grading effect, $\nu_{j(it)}$
+\end{itemize}
+Variation is the student's grade aside from these factors is then incorporated into $\varepsilon_{it}$, the remaining within-student residual. Student $i$'s grade in period $t$ after being assigned to teacher $j(it)$ is thus given by:
+\begin{equation}
+\begin{split}
+ 	g_{it} & = h_{it}+\nu_{j(it)}+\varepsilon_{it}\\
+\end{split}
+\end{equation}
+Here, $\nu_{j(it)}$ can be thought of as the component of teacher $j$'s grading practice which is not linked to student understanding of the material, and is thus independent from $h_{i,t}$. Using Assumption $1$, we then can rewrite the grade equation as 
+\begin{equation}
+\begin{split}
+	\label{eqn:grade_eqn}
+ 	g_{it} & = h_{it}+\nu_{j(it)}+\varepsilon_{it}\\\
+ 	& = (h_{i,t-1} + \gamma_{j(it)}) + \nu_{j(it)} + \varepsilon_{it}
+\end{split}
+\end{equation}
+This version of the grade equation has a very intuitive interpretation: we can think of $h_{i,t-1}$ as the ex-ante grade we would expect student $i$ to receive in period $t$. This is then altered by (1) the actual amount the student learns in period $t$, $\gamma_{j(it)}$, (2) the teacher's idiosyncratic grading effect, $\nu_{j(it)}$, and (3) other unobservable predictors of student grades, given by $\varepsilon_{it}$. 
+% QUESTION: Is it better to treat $\varepsilon_{ijt}$ as a shock to grading, or to human capital accumulation?
+% Roy's answer: Doesn't actually make any difference, and as a shock to grading is probably more consistent. Might matter more if we looked at more than two periods?
+
+This equation, however, does not leave us with the ability to separate a teacher's value-added affect on student learning, $\gamma_{j(it)}$, from their idiosyncratic grading effect, $\nu_{j(it)}$. 
+% QUESTION: Could we somehow esimtate $\nu_j$ separately using traditional value add measures (namely, test scores), and see if our results are consistent?
+To address this issue, we can difference grades across periods $t$ and $t+1$. Intuitively, period $t$ gains in human capital should be evidenced in period $t+1$ grades, so this differencing should allow us to get closer to the idiosyncratic grading effects in period $t$. Mathematically, we see that
+\begin{align}
+\begin{split}
+	\label{eqn:difference}
+	g_{it}-g_{i,t+1} & = 
+	[h_{it}+\nu_{j(it)}+\varepsilon_{it}] 
+	- [h_{i,t+1} + \nu_{j(i,t+1)} + \varepsilon_{i,t+1}]\\
+	& = [h_{it}+\nu_{j(it)}+\varepsilon_{it}]  -
+	[h_{it}+\gamma_{j(i,t+1)}+\nu_{j(i,t+1)} + \varepsilon_{i,t+1}]\\
+	& = \nu_{j(it)} - [\gamma_{j(i,t+1)} + \nu_{j(i,t+1)}] - [\varepsilon_{i,t+1}-\varepsilon_{it}]
+\end{split}
+\end{align}
+Next, to help ensure that the parameter of interest $\nu_{j(it}$ is uncorrelated with the remaining within student residuals from equation (\ref{eqn:difference}), we project them onto $X_{it}$, a vector of student observables:
+\begin{equation}
+	-[\varepsilon_{i,t+1}-\varepsilon_{it}] = \beta_1 X_{it} + e_{it}
+\end{equation}
+In our setting, $X_{it}$ represents the observable components of student achievement in our data, such as student demographic characteristics and performance and attendance prior to period $t$. In addition to being correlated with unobserved predictors of student outcomes, these factors may also be correlated with the grading and teaching characteristics of a student's assigned teacher in period $t+1$, $\gamma_{j(i,t+1)}$ and $\nu_{j(i,t+1)}$. Thus, we also project these onto $X_{it}$:
+\begin{equation}
+	-[\gamma_{j(i,t+1)}+\nu_{j(i,t+1)}] = \beta_2 X_{it} + u_{it}
+\end{equation}
+Using these two projections, we can then rewrite equation (\ref{eqn:difference}) as 
+\begin{equation}
+	\label{eqn:final}
+	g_{it}-g_{i,t+1}=\nu_{j(it)} + (\beta_1 + \beta_2) X_{it} + e_{it} + u_{it} 
+\end{equation}
+From here, two additional assumptions are required for the identification of $\nu_{j(it)}$:
+
+\bigskip
+\noindent\fbox{%
+	\parbox{\textwidth}{%{}
+		\textbf{Assumption 2 (Random Assignment of Teacher $j(it)$):} Assume that 
+		\[
+			\mathbb{E}[e_{it} \mid j(it)] = \mathbb{E}[e_{it}] = 0 
+		\]
+	That is, students are not sorted to their period $t$ teacher based on unobservable determinants of a student's grade.
+	}
+}
+\bigskip
+
+\bigskip
+\noindent\fbox{%
+	\parbox{\textwidth}{%
+		\textbf{Assumption 3 (Random Assignment of Teacher $j(i,t+1)$):} Assume that 
+		\[
+			\mathbb{E}[u_{it} \mid j(it)] = \mathbb{E}[u_{it}] = 0
+		\]
+	This assumption implies that the characteristics of a student's teacher in period $t+1$ which are not predicted by student observables are not related to determined by their teacher assignment in period $t$.
+	}
+}
+\bigskip
+
+\noindent These assumptions ensure that our error term in equation (\ref{eqn:final}) is uncorrelated with our predictors, implying that $\nu_{j(it)}$, our parameter of interest, is identified under regression. 
+
+% Since $X_{it}$ is observed for each student assigned to $j(it)$, we have now have identified our idiosyncratic grading effect of teacher $j$, $\nu_j$, in terms of observable components. To estimate the appropriate $\beta$, we follow the literature (\citealt{gilraineMakingTeachingLast2020}, \citealt{chettyMeasuringImpactsTeachers2014}), and use between student variation to estimate 
+% \begin{equation}
+% 	g_{it}-g_{i,t+1} = \alpha_{j(it)} + \beta X_{it}
+% \end{equation}
+% Note that equation (\ref{eqn:final}) is equivalent to taking the expected value of the difference in test scores with observable characteristics removed:
+% \begin{equation}
+% 	\mathbb{E}[g_{it}-g_{i,t+1}-\beta X_{it} \mid j(it)] = \nu_{j(it)}
+% \end{equation} 
+
+
+% QUESTION: How does the Maryland paper work treating attendance in period $t$? THIS IS THE ONE IS TILL NEED TO ASK PETER.
+
+% \subsection{Estimation Procedure}
+
+% To estimate the teacher gradin,g effect $\nu_j$ in the data, we adopt a method comonly used in the teacher value-added literature. First, we follow \cite{chettyMeasuringImpactsTeachers2014} and remove observable characteristics from our grade outcomes by estimating the following equation using OLS
+% \begin{equation}
+% 	g_{ijt}-g_{ik,t+1} = \alpha_{j} + \alpha_{k} + \beta X_{i,t+1}
+% \end{equation}
+% where $\alpha_{j}$ and $\alpha_{k}$ represent teacher $j$ and $k$ fixed effects, respectively.s
+\bibliographystyle{abbrvnat}
+\end{document}

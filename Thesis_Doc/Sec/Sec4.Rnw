@@ -1,0 +1,41 @@
+<<set-parent4, echo=FALSE, cache=FALSE>>=
+library(knitr)
+opts_knit$set(self.contained=FALSE)
+set_parent("../thesis_main.Rnw")
+@
+\doublespacing
+
+\section{Data}
+\label{section:data}
+
+The data for our analysis are drawn from a longitudinal Chicago Public Schools administrative dataset for both students and teachers. The available data extends almost thirty years, but we focus on freshman cohorts from school years 2010-2011 to 2013-2014, and thus use data from school years 2009-2010 to 2019-2020 in order to include information on postsecondary enrollments. This dataset is particularly strong as it provides a near-comprehensive summary of nearly every aspect of the problem under consideration. In particular, we consider three levels of data:
+
+\subsection{1. Student Level} 
+
+The student level dataset contains information on every student enrolled at CPS in the time period under consideration, with one observation per student per year. These data form the base from which we construct and characterize our analytic sample. 
+
+\textit{Demographics.} The dataset contains detailed information on the gender, ethnicity, and age for all students in our sample, as well as information regarding if they qualified for special education, free and reduced lunch, or English-language learner status. 
+
+\textit{Educational Information.} The dataset links students with detailed information regarding their educational trajectory. For each year, we observe the school the student was enrolled in, the grade they were enrolled in, and their state-administered test scores for that year. In addition, upon a student leaving CPS, we record their reason for leaving (that is, graduating, dropping out, etc.)
+
+\textit{Post-Secondary Outcomes.} In addition to the CPS level information given above, we also merge in data from the National School Clearinghouse dataset, which provides information on the post-secondary outcomes of the CPS students in our sample. This includes the dates and schools of a students higher education enrollments for ten years after high school graduation, as well as the date of college exit and degrees received (if any). This dataset allows us to look at outcomes beyond the high school level. 
+
+\subsection{2. Class Level}
+
+The class level dataset details, for each student, all of the classes which they took in a given semester. The dataset also links students with information on the classes in which they were enrolled each semester. 
+
+\textit{Descriptive.} The dataset includes descriptive information on each class, including the subject, level, and period of the day in which the class occurred. This allows for several of the most important controls used in our analysis, and also allows us to track student outcomes in a single subject over time. 
+
+\textit{Student Performance.} The dataset also contains several measures of student performance and engagement in the class; namely, both mid-semester and final grades, as well as the number of absences accrued by the student in that class that semester. 
+
+\textit{Teacher Information.} The class level dataset also links each class to the unique teacher ID of the instructor for that course. 
+
+\subsection{3. Teacher Level} 
+
+Our final dataset is at the teacher level, containing descriptive and demographic information for each CPS teacher. As mentioned above, this dataset can be linked to the class level dataset by means of the teacher ID. For CPS, however, the quality of teacher IDs is less rigorously maintained than that of students IDs. Thus, we employ a fuzzy matching procedure to better link our teacher level data with the corresponding class level data. 
+
+\subsection{Sample Construction}
+
+We construct our sample using the three datasets listed above. As stated above, we limit our analysis to students from the freshman cohorts in school years 2010-2011 to 2013-2014. For the class level dataset, we limit our sample to enrollments in core classes - mathematics, science, reading, or social studies. We include several other controls to filter out errors in the underlying data: for example, we filter on the number of students a given teacher sees in a given year, the number of classes a student is enrolled in, and student age. 
+
+For the purpose of the analysis, we also require students to have been enrolled in both the year prior to and the year after their freshman year. In order for our estimates to be consistent, we also require that the student was in eighth grade the previous year and tenth grade the following year. While this precludes students who follow a non-traditional educational path, it is required for our estimates of teacher grading effect to hold across the cohort. 

@@ -1,0 +1,536 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.1 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated as
+% required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+\datalist[entry]{nty/global//global/global}
+  \entry{abdulkadirogluChartersLotteriesTesting2016}{article}{}
+    \name{author}{4}{}{%
+      {{hash=AA}{%
+         family={Abdulkadiro{\u g}lu},
+         familyi={A\bibinitperiod},
+         given={Atila},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=AJD}{%
+         family={Angrist},
+         familyi={A\bibinitperiod},
+         given={Joshua\bibnamedelima D.},
+         giveni={J\bibinitperiod\bibinitdelim D\bibinitperiod},
+      }}%
+      {{hash=HPD}{%
+         family={Hull},
+         familyi={H\bibinitperiod},
+         given={Peter\bibnamedelima D.},
+         giveni={P\bibinitperiod\bibinitdelim D\bibinitperiod},
+      }}%
+      {{hash=PPA}{%
+         family={Pathak},
+         familyi={P\bibinitperiod},
+         given={Parag\bibnamedelima A.},
+         giveni={P\bibinitperiod\bibinitdelim A\bibinitperiod},
+      }}%
+    }
+    \list{language}{1}{%
+      {en}%
+    }
+    \strng{namehash}{AA+1}
+    \strng{fullhash}{AAAJDHPDPPA1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{shorttitle}
+    \field{labelyear}{2016}
+    \field{labeldatesource}{}
+    \field{sortinit}{A}
+    \field{sortinithash}{A}
+    \field{abstract}{%
+    Charter takeovers are traditional public schools restarted as charter
+  schools. We develop a grandfathering instrument for takeover attendance that
+  compares students at schools designated for takeover with a matched sample of
+  students attending similar schools not yet taken over. Grandfathering
+  estimates from New Orleans show substantial gains from takeover enrollment.
+  In Boston, grandfathered students see achievement gains at least as large as
+  the gains for students assigned charter seats in lotteries. A non-charter
+  Boston turnaround intervention that had much in common with the takeover
+  strategy generated gains as large as those seen for takeovers, while other
+  more modest turnaround interventions yielded smaller effects. (JEL D44, H75,
+  I21, I28)%
+    }
+    \verb{doi}
+    \verb 10.1257/aer.20150479
+    \endverb
+    \field{issn}{0002-8282}
+    \field{number}{7}
+    \field{pages}{1878\bibrangedash 1920}
+    \field{shorttitle}{Charters without {{Lotteries}}}
+    \field{title}{Charters without {{Lotteries}}: {{Testing Takeovers}} in
+  {{New Orleans}} and {{Boston}}}
+    \field{volume}{106}
+    \verb{file}
+    \verb /Users/roymckenzie/Dropbox/Thesis/ECON/Papers/Abdulkadiroğlu_et_al_2
+    \verb 016_Charters_without_Lotteries.pdf
+    \endverb
+    \field{journaltitle}{American Economic Review}
+    \field{month}{07}
+    \field{year}{2016}
+  \endentry
+
+  \entry{allensworthHighSchoolGPAs2020}{article}{}
+    \name{author}{2}{}{%
+      {{hash=AEM}{%
+         family={Allensworth},
+         familyi={A\bibinitperiod},
+         given={Elaine\bibnamedelima M.},
+         giveni={E\bibinitperiod\bibinitdelim M\bibinitperiod},
+      }}%
+      {{hash=CK}{%
+         family={Clark},
+         familyi={C\bibinitperiod},
+         given={Kallie},
+         giveni={K\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {{American Educational Research Association}}%
+    }
+    \strng{namehash}{AEMCK1}
+    \strng{fullhash}{AEMCK1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{shorttitle}
+    \field{labelyear}{2020}
+    \field{labeldatesource}{}
+    \field{sortinit}{A}
+    \field{sortinithash}{A}
+    \field{abstract}{%
+    High school GPAs (HSGPAs) are often perceived to represent inconsistent
+  levels of readiness for college across high schools, whereas test scores
+  (e.g., ACT scores) are seen as comparable. This study tests those
+  assumptions, examining variation across high schools of both HSGPAs and ACT
+  scores as measures of academic readiness for college. We found students with
+  the same HSGPA or the same ACT score graduate at very different rates based
+  on which high school they attended. Yet, the relationship of HSGPAs with
+  college graduation is strong and consistent and larger than school effects.
+  In contrast, the relationship of ACT scores with college graduation is weak
+  and smaller than high school effects, and the slope of the relationship
+  varies by high school.%
+    }
+    \verb{doi}
+    \verb 10.3102/0013189X20902110
+    \endverb
+    \field{issn}{0013-189X}
+    \field{number}{3}
+    \field{pages}{198\bibrangedash 211}
+    \field{shorttitle}{High {{School GPAs}} and {{ACT Scores}} as
+  {{Predictors}} of {{College Completion}}}
+    \field{title}{High {{School GPAs}} and {{ACT Scores}} as {{Predictors}} of
+  {{College Completion}}: {{Examining Assumptions About Consistency Across High
+  Schools}}}
+    \field{volume}{49}
+    \verb{file}
+    \verb /Users/roymckenzie/Dropbox/Thesis/ECON/Papers/Allensworth_Clark_2020_
+    \verb High_School_GPAs_and_ACT_Scores_as_Predictors_of_College_Completion.p
+    \verb df
+    \endverb
+    \field{journaltitle}{Educational Researcher}
+    \field{month}{04}
+    \field{year}{2020}
+  \endentry
+
+  \entry{allensworthWhyStudentsGet2018}{article}{}
+    \name{author}{2}{}{%
+      {{hash=AEM}{%
+         family={Allensworth},
+         familyi={A\bibinitperiod},
+         given={Elaine\bibnamedelima M.},
+         giveni={E\bibinitperiod\bibinitdelim M\bibinitperiod},
+      }}%
+      {{hash=LS}{%
+         family={Luppscu},
+         familyi={L\bibinitperiod},
+         given={Stuart},
+         giveni={S\bibinitperiod},
+      }}%
+    }
+    \keyw{_tablet}
+    \strng{namehash}{AEMLS1}
+    \strng{fullhash}{AEMLS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelyear}{2018}
+    \field{labeldatesource}{}
+    \field{sortinit}{A}
+    \field{sortinithash}{A}
+    \field{title}{Why Do Students Get Good Grades, or Bad Ones? {{The}}
+  Influence of the Teacher, Class, School, and Student}
+    \verb{file}
+    \verb /Users/roymckenzie/Dropbox/Thesis/ECON/Papers/Allensworth_Luppscu_201
+    \verb 8_Why_do_students_get_good_grades,_or_bad_ones.pdf
+    \endverb
+    \field{year}{2018}
+  \endentry
+
+  \entry{chettyMeasuringImpactsTeachers2014}{article}{}
+    \name{author}{3}{}{%
+      {{hash=CR}{%
+         family={Chetty},
+         familyi={C\bibinitperiod},
+         given={Raj},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=FJN}{%
+         family={Friedman},
+         familyi={F\bibinitperiod},
+         given={John\bibnamedelima N},
+         giveni={J\bibinitperiod\bibinitdelim N\bibinitperiod},
+      }}%
+      {{hash=RJE}{%
+         family={Rockoff},
+         familyi={R\bibinitperiod},
+         given={Jonah\bibnamedelima E},
+         giveni={J\bibinitperiod\bibinitdelim E\bibinitperiod},
+      }}%
+    }
+    \list{language}{1}{%
+      {en}%
+    }
+    \keyw{_tablet}
+    \strng{namehash}{CRFJNRJE1}
+    \strng{fullhash}{CRFJNRJE1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelyear}{2014}
+    \field{labeldatesource}{}
+    \field{sortinit}{C}
+    \field{sortinithash}{C}
+    \field{pages}{56}
+    \field{title}{Measuring the {{Impacts}} of {{Teachers I}}: {{Evaluating
+  Bias}} in {{Teacher Value}}-{{Added Estimates}}}
+    \verb{file}
+    \verb /Users/roymckenzie/Dropbox/Thesis/ECON/Papers/Chetty_et_al_2014_Measu
+    \verb ring_the_Impacts_of_Teachers_I.pdf
+    \endverb
+    \field{journaltitle}{THE AMERICAN ECONOMIC REVIEW}
+    \field{year}{2014}
+  \endentry
+
+  \entry{eastonPredictivePowerNinthGrade2017}{article}{}
+    \name{author}{3}{}{%
+      {{hash=EJQ}{%
+         family={Easton},
+         familyi={E\bibinitperiod},
+         given={John\bibnamedelima Q},
+         giveni={J\bibinitperiod\bibinitdelim Q\bibinitperiod},
+      }}%
+      {{hash=JE}{%
+         family={Johnson},
+         familyi={J\bibinitperiod},
+         given={Esperanza},
+         giveni={E\bibinitperiod},
+      }}%
+      {{hash=SL}{%
+         family={Sartain},
+         familyi={S\bibinitperiod},
+         given={Lauren},
+         giveni={L\bibinitperiod},
+      }}%
+    }
+    \list{language}{1}{%
+      {en}%
+    }
+    \strng{namehash}{EJQJESL1}
+    \strng{fullhash}{EJQJESL1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelyear}{2017}
+    \field{labeldatesource}{}
+    \field{sortinit}{E}
+    \field{sortinithash}{E}
+    \field{pages}{28}
+    \field{title}{The {{Predictive Power}} of {{Ninth}}-{{Grade GPA}}}
+    \verb{file}
+    \verb /Users/roymckenzie/Dropbox/Thesis/ECON/Papers/Easton_et_al_2017_The_P
+    \verb redictive_Power_of_Ninth-Grade_GPA.pdf
+    \endverb
+    \field{year}{2017}
+  \endentry
+
+  \entry{gershensonGradeInflationHigh2018}{article}{}
+    \name{author}{1}{}{%
+      {{hash=GS}{%
+         family={Gershenson},
+         familyi={G\bibinitperiod},
+         given={Seth},
+         giveni={S\bibinitperiod},
+      }}%
+    }
+    \list{language}{1}{%
+      {en}%
+    }
+    \strng{namehash}{GS1}
+    \strng{fullhash}{GS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelyear}{2018}
+    \field{labeldatesource}{}
+    \field{sortinit}{G}
+    \field{sortinithash}{G}
+    \field{pages}{35}
+    \field{title}{Grade {{Inflation}} in {{High Schools}} (2005\textendash
+  2016)}
+    \verb{file}
+    \verb /Users/roymckenzie/Dropbox/Thesis/ECON/Papers/Gershenson_2018_Grade_I
+    \verb nflation_in_High_Schools_(2005–2016).pdf
+    \endverb
+    \field{year}{2018}
+  \endentry
+
+  \entry{gilraineMakingTeachingLast2020}{article}{}
+    \name{author}{2}{}{%
+      {{hash=GM}{%
+         family={Gilraine},
+         familyi={G\bibinitperiod},
+         given={Michael},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=PN}{%
+         family={Pope},
+         familyi={P\bibinitperiod},
+         given={Nolan},
+         giveni={N\bibinitperiod},
+      }}%
+    }
+    \list{language}{1}{%
+      {en}%
+    }
+    \strng{namehash}{GMPN1}
+    \strng{fullhash}{GMPN1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelyear}{2020}
+    \field{labeldatesource}{}
+    \field{sortinit}{G}
+    \field{sortinithash}{G}
+    \field{abstract}{%
+    Recent research indicates that teachers with high value-added (VA) improve
+  their students' later life outcomes, leading to VA measures featuring ever
+  more widely in high-stakes decision-making. Yet concerns remain that VA
+  measures might capture undesirable dimensions of learning such as rote
+  memorization that are unlikely to contribute to a student's lifelong success.
+  This paper separates test score value-added measure into two components:
+  long-run VA, which persists to the following year, and short-run VA, which
+  does not. We find that students assigned to high long-run VA teachers fare
+  substantially better in terms of long-run outcomes. In contrast, students
+  assigned to high short-run VA teachers do not perform any better in terms of
+  long-run outcomes. We also find that long-run VA is correlated with
+  non-cognitive VA measures, whereas short-run VA is not. Policy simulations
+  indicate that the use of long-run VA improves policy effectiveness by a
+  factor of two over traditional VA measures.%
+    }
+    \field{pages}{57}
+    \field{title}{Making {{Teaching Last}}: {{Long}}- and {{Short}}-{{Run
+  Value}}-{{Added}}}
+    \verb{file}
+    \verb /Users/roymckenzie/Dropbox/Thesis/ECON/Papers/Gilraine_Pope_Making_Te
+    \verb aching_Last.pdf
+    \endverb
+    \field{year}{2020}
+  \endentry
+
+  \entry{jacksonTeacherEffectsTeacherRelated2014}{article}{}
+    \name{author}{3}{}{%
+      {{hash=JCK}{%
+         family={Jackson},
+         familyi={J\bibinitperiod},
+         given={C.\bibnamedelima Kirabo},
+         giveni={C\bibinitperiod\bibinitdelim K\bibinitperiod},
+      }}%
+      {{hash=RJE}{%
+         family={Rockoff},
+         familyi={R\bibinitperiod},
+         given={Jonah\bibnamedelima E.},
+         giveni={J\bibinitperiod\bibinitdelim E\bibinitperiod},
+      }}%
+      {{hash=SDO}{%
+         family={Staiger},
+         familyi={S\bibinitperiod},
+         given={Douglas\bibnamedelima O.},
+         giveni={D\bibinitperiod\bibinitdelim O\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {{Annual Reviews}}%
+    }
+    \strng{namehash}{JCKRJESDO1}
+    \strng{fullhash}{JCKRJESDO1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelyear}{2014}
+    \field{labeldatesource}{}
+    \field{sortinit}{J}
+    \field{sortinithash}{J}
+    \field{abstract}{%
+    The emergence of large longitudinal data sets linking students to teachers
+  has led to rapid growth in the study of teacher effects on student outcomes
+  by economists over the past decade. One large literature has documented wide
+  variation in teacher effectiveness that is not well explained by observable
+  student or teacher characteristics. A second literature has investigated how
+  educational outcomes might be improved by leveraging teacher effectiveness
+  through processes of recruitment, assignment, compensation, evaluation,
+  promotion, and retention. These two lines of inquiry are closely tied; the
+  first tells us about the importance of individual teachers, and the second
+  tells us how this information can be used in policy and practice. We review
+  the most recent findings in economics on the importance of teachers and on
+  teacher-related policies aimed at improving educational production.%
+    }
+    \field{issn}{1941-1383}
+    \field{pages}{801\bibrangedash 825}
+    \field{title}{Teacher {{Effects}} and {{Teacher}}-{{Related Policies}}}
+    \field{volume}{6}
+    \verb{file}
+    \verb /Users/roymckenzie/Dropbox/Thesis/ECON/Papers/Jackson_et_al_2014_Teac
+    \verb her_Effects_and_Teacher-Related_Policies.pdf
+    \endverb
+    \field{journaltitle}{Annual Review of Economics}
+    \field{year}{2014}
+  \endentry
+
+  \entry{kaneEstimatingTeacherImpacts2008}{report}{}
+    \name{author}{2}{}{%
+      {{hash=KT}{%
+         family={Kane},
+         familyi={K\bibinitperiod},
+         given={Thomas},
+         giveni={T\bibinitperiod},
+      }}%
+      {{hash=SD}{%
+         family={Staiger},
+         familyi={S\bibinitperiod},
+         given={Douglas},
+         giveni={D\bibinitperiod},
+      }}%
+    }
+    \list{language}{1}{%
+      {en}%
+    }
+    \keyw{_tablet}
+    \strng{namehash}{KTSD1}
+    \strng{fullhash}{KTSD1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{shorttitle}
+    \field{labelyear}{2008}
+    \field{labeldatesource}{}
+    \field{sortinit}{K}
+    \field{sortinithash}{K}
+    \field{abstract}{%
+    We used a random-assignment experiment in Los Angeles Unified School
+  District to evaluate various non-experimental methods for estimating teacher
+  effects on student test scores. Having estimated teacher effects during a
+  pre-experimental period, we used these estimates to predict student
+  achievement following random assignment of teachers to classrooms. While all
+  of the teacher effect estimates we considered were significant predictors of
+  student achievement under random assignment, those that controlled for prior
+  student test scores yielded unbiased predictions and those that further
+  controlled for mean classroom characteristics yielded the best prediction
+  accuracy. In both the experimental and non-experimental data, we found that
+  teacher effects faded out by roughly 50 percent per year in the two years
+  following teacher assignment.%
+    }
+    \verb{doi}
+    \verb 10.3386/w14607
+    \endverb
+    \field{number}{w14607}
+    \field{pages}{w14607}
+    \field{shorttitle}{Estimating {{Teacher Impacts}} on {{Student
+  Achievement}}}
+    \field{title}{Estimating {{Teacher Impacts}} on {{Student Achievement}}:
+  {{An Experimental Evaluation}}}
+    \list{location}{1}{%
+      {{Cambridge, MA}}%
+    }
+    \list{institution}{1}{%
+      {{National Bureau of Economic Research}}%
+    }
+    \verb{file}
+    \verb /Users/roymckenzie/Dropbox/Thesis/ECON/Papers/Kane_Staiger_2008_Estim
+    \verb ating_Teacher_Impacts_on_Student_Achievement.pdf
+    \endverb
+    \field{type}{techreport}
+    \field{month}{12}
+    \field{year}{2008}
+  \endentry
+
+  \entry{kolesarIdentificationInferenceMany2015}{article}{}
+    \name{author}{5}{}{%
+      {{hash=KM}{%
+         family={Koles{\'a}r},
+         familyi={K\bibinitperiod},
+         given={Michal},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=CR}{%
+         family={Chetty},
+         familyi={C\bibinitperiod},
+         given={Raj},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=FJ}{%
+         family={Friedman},
+         familyi={F\bibinitperiod},
+         given={John},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=GE}{%
+         family={Glaeser},
+         familyi={G\bibinitperiod},
+         given={Edward},
+         giveni={E\bibinitperiod},
+      }}%
+      {{hash=IGW}{%
+         family={Imbens},
+         familyi={I\bibinitperiod},
+         given={Guido\bibnamedelima W.},
+         giveni={G\bibinitperiod\bibinitdelim W\bibinitperiod},
+      }}%
+    }
+    \list{language}{1}{%
+      {en}%
+    }
+    \strng{namehash}{KM+1}
+    \strng{fullhash}{KMCRFJGEIGW1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelyear}{2015}
+    \field{labeldatesource}{}
+    \field{sortinit}{K}
+    \field{sortinithash}{K}
+    \verb{doi}
+    \verb 10.1080/07350015.2014.978175
+    \endverb
+    \field{issn}{0735-0015, 1537-2707}
+    \field{number}{4}
+    \field{pages}{474\bibrangedash 484}
+    \field{title}{Identification and {{Inference With Many Invalid
+  Instruments}}}
+    \field{volume}{33}
+    \verb{file}
+    \verb /Users/roymckenzie/Zotero/storage/3G2LLCYV/Kolesár et al. - 2015 - I
+    \verb dentification and Inference With Many Invalid Ins.pdf
+    \endverb
+    \field{journaltitle}{Journal of Business \& Economic Statistics}
+    \field{month}{10}
+    \field{year}{2015}
+  \endentry
+\enddatalist
+\endinput
