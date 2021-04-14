@@ -1,0 +1,239 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage{setspace}
+\usepackage{framed} 
+\pagestyle{fancy}
+\usepackage{amsmath, amsthm, amssymb, amsfonts, mathtools, xfrac, mathrsfs, tikz}
+\usepackage{enumerate}
+\usepackage{graphicx,dsfont, float}
+\usepackage{braket, bm}
+\usepackage{bbold}
+\usepackage{setspace}
+
+
+\DeclareMathOperator{\im}{im}
+\DeclareMathOperator{\detr}{det}
+\DeclareMathOperator{\var}{var}
+\DeclareMathOperator{\cov}{cov}
+\DeclareMathOperator{\Real}{Re}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\argmax}{argmax}
+\DeclareMathOperator{\vect}{vec}
+\newcommand{\fm}{\end{bmatrix}}
+\def\a{\alpha}
+\def\b{\beta}
+\def\g{\gamma}
+\def\D{\Delta}
+\def\d{\delta}
+\def\z{\zeta}
+\def\k{\kappa}
+\def\l{\lambda}
+\def\n{\nu}
+\def\e{\varepsilon}
+\def\r{\rho}
+\def\s{\sigma}
+\def\S{\Sigma}
+\def\t{\tau}
+\def\x{\xi}
+\def\w{\omega}
+\def\W{\Omega}
+\def\th{\theta}
+\def\p{\phi}
+\def\P{\Phi}
+\def\th{\theta}
+\newcommand{\pa}{\mathcal \partial}
+\newcommand{\No}{\mathcal N}
+\def\E{\mathbb{E}}
+\def\R{\mathbb{R}}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{8pt}
+
+
+\chead{Roy McKenzie}
+
+\begin{document}
+
+\section{Theoretical Framework}
+
+\subsection{Base Framework}
+
+First, let us consider a simple model of teacher grading. Assume there are two time periods, $t = 1$ and $t = 2$. We assume each student $i$ is assigned to some teacher $j_1$ drawn from the set $J_1$ in period one, and another teacher $j_2$ from the set $J_2$ in period two, and that $J_1 \cap J_2 = \emptyset$. 
+
+Each student $i$ enters each period with a certain level of human capital, given by $h_{it}$. We assume this is normalized in period one to have mean zero. In each period, the student's human capital is then augmented by a teacher varying function of human capital, given by $f_{j}(h)$ for teacher $j$. Thus, the law of motion for human capital is described by
+
+\begin{equation}
+	h_{i, t+1} = h_{it} + f_j(h_{it})
+\end{equation}
+
+Additionally, in each period, a student recieves a grade at the end of the period depending on their initial level of human capital, the amount of human capital accumulation they undergod, as well as on an idiosyncratic impact of teacher $j$ on grading, $\nu_j$. This variable $\nu_j$ can be thought of as teacher $j$'s specific grading practices which are uncorrelated in with actual increases in student human capital. Assume that it is normalized across teachers and therefore has mean zero. 
+
+From this, in each period $t$, we can thus write student $i$'s grade $g_{ijt}$ with teacher $j$ as
+
+\begin{equation}
+	g_{ijt} = h_{it} + f_j(h_{it}) + \nu_{j} 
+\end{equation}
+
+Using this, we can take the difference in grades over the two periods:
+
+\begin{align}
+	g_{ij_11}-g_{ij_22} & = h_{i1}+f_{j_1}(h_{i1})+\nu_{j_1}-h_{i2}-f_{j_2}(h_{i_2})-\nu_{j_2}\\
+	& = h_{i1}+f_{j_1}(h_{i1})+\nu_{j_1}-(h_{i1}+f_{j_1}(h_{i1})+f_{j_2}(h_{i1}+f_{j_1}(h_{i1}))+\nu_{j_2})\\
+	& = \nu_{j_1}-f_{j_2}(h_{i1}+f_{j1}(h_i1))-\nu_{j_2}
+\end{align}
+
+Taking the conditional expectation with respect to the first period teacher, we can then see that:
+
+\begin{align}
+\begin{split}
+	\label{eqn:eqn2}
+	\mathbb{E}[g_{i1}-g_{i2} \mid j_1] & = \mathbb{E}[\nu_{j_1}-f_{j_2}(h_{i1}+f_{j1}(h_i1))-\nu_{j_2} \mid j_1]\\
+	& = \nu_{j_1} - \mathbb{E}[f_{j_2}(h_{i1}+f_{j_1}(h_{i1})) \mid j_1]
+\end{split}
+\end{align}
+
+We now make a few initial assumptions to continue our identification argument, which we will later work to relax.
+
+\noindent\fbox{%
+	\parbox{\textwidth}{%
+		\textbf{Assumption 1:} Assume that $f_j$ has a form given by 
+			\[
+				f_j(h_{it}) = \gamma_j
+			\]
+		That is, each teacher's impact on student human capital augmentation is defined by a "teacher effectiveness" term given by $\gamma_{j}$. We assume that $\gamma_{j}$ is normalized to have mean zero.
+	}%
+}
+
+This assumption allows us to rewrite equation \ref{eqn:eqn2} as
+
+\begin{align}
+\begin{split}
+	\label{eqn:eqn3}
+	\mathbb{E}[g_{i j_{1} 1}-g_{i j_{2}2} \mid j_1] & = \nu_{j_1} - \mathbb{E}[\gamma_{j_2} \mid j_1] - \mathbb{E}[\nu_{j_2} \mid j_1] \\
+\end{split}
+\end{align}
+
+Thus, we can immediately see that there are two sufficient conditions for the identification of $\nu_{j_1}$ to hold in this case; namely, that 
+
+\[
+	\mathbb{E}[\gamma_{j_2}\mid j_1] = \mathbb{E}[\gamma_{j_2}] = 0 \textrm{ and } \mathbb{E}[\nu_{j_2} \mid j_1] = \mathbb{E}[\nu_{j_2}] = 0
+\]
+
+In other words:
+
+\noindent\fbox{%
+	\parbox{\textwidth}{%
+		\textbf{Assumption 2:} The expected teacher effectiveness coefficient $(\theta_j)$ and idiosyncratic teacher grading practices $(\nu_j)$ for a student's teacher in period two is mean independent from their teacher assignment in period one. 
+	}%
+}
+
+If these two assumptions hold, then we can successfuly identify the idiosyncratic component of each period one teacher's grading in this model. Clearly, this is the case if teacher's in period two are randomly assigned; this, however, may not be the case. 
+
+\subsection{Extended Framework}  
+
+We now wish to expand the mdoel from above to perhaps more accurately reflect the setting we encounter. For now, we still assume that each student sees only one teacher in period one and one teacher in period two - this can be easily replicated in our sample by only looking at teacher's of the same subject year after year. 
+
+Here, again let $h_{it}$ be student $i$'s level of human capital in time $t$. It may be helpful to think of $h_{it}$ as the grade we would initially expect student $i$ to recieve entering time $t$, given no additional impacts. Starting here, we can then decompose the student's final grade as follows: 
+
+\begin{align}
+	g_{ijt} = h_{it} + f_j(h_{it}) + \nu_{j} + \theta_{t} + \varepsilon_{ijt}
+\end{align}
+
+where $\theta_t$ represents a potential time shock in time $t$ and $\varepsilon_{ijt}$ is the remaining difference in grade between for student $i$ with teacher $j$ in time $t$. Additionally, the law of motion for human capital is again given by:
+
+\begin{align}
+	h_{i, t+1} = h_{it} + f_j(h_{it})
+\end{align}
+
+We now additionally decompose the students human capital augementation function with teacher $j$:
+
+\begin{align}
+	f_j(h_{it}) = \beta X_{i} + \gamma_{j} + r_{ij} 
+\end{align}
+
+Here, $X_{i}$ is a vector of student characteristics which affect student learning, $\gamma_j$ represents an idiosyncratic teacher effect on student human capital which is constant across time and students, and $r_{ij}$ represents the idiosyncratic effect of the relationship between student $i$ and teacher $j$ on student human capital accumulation. Thus, adding this to the above, we have that 
+
+\begin{equation}
+	g_{ijt} =  h_{it} + \beta X_{i} + r_{ij} + \gamma_{j} + \nu_{j} + \theta_{t} + \varepsilon_{ijt} 
+\end{equation}
+
+Now, we can write, again appealing to the law of motion for human capital, that 
+
+\begin{align}
+	g_{ij_{1}1}-g_{ij_{2}2} & = h_{i1} + f_{j_1}(h_{i1}) + \nu_{j_1} + \theta_{1} + \varepsilon_{ij_11} - [h_{i2} + f_{j_2}(h_{i2}) + \nu_{j_2} + \theta_{2} + \varepsilon_{ij_2t}]\\
+	& = h_{i1} + f_{j_1}(h_{i1}) + \theta_{1} + \varepsilon_{ij_11} - (h_{i1} + f_{j_1}(h_{i1}) + f_{j_2}(h_{i2}) + \nu_{j_2} + \theta_{2} + \varepsilon_{ij_2t})\\
+	& = \nu_{j_1} + \theta_1 + \varepsilon_{ij_11} - [f_{j_2}(h_{i2}) + \theta_2 + \nu_{j_2} + \varepsilon_{ij_2t}]\\
+	& = \nu_{j_1} + \theta_{1} + \varepsilon_{ij_11} - [\beta X_i + \gamma_{j_2} + \nu_{j_2} + r_{ij_2} + \theta_2 + \varepsilon_{ij_2t}]\\
+	& = \nu_{j_1} + (\theta_1-\theta_2) - \beta X_i + u_{j_2} + r_{ij_2} + \epsilon_{ij_2t}
+\end{align}
+
+where $u_{j_2} = \gamma_{j_2} + \nu_{j_2}$. We now wish to understand the assumptions under which we can consistenly estimate $\nu_{j_1}$. For now, assume a traditional OLS estimation, with full error term given by
+
+\[
+	e_{ij_2t} = u_{j_2} + r_{ij_2} + \varepsilon_{ij_2t}
+\]
+
+In this case, for consistent estimation, we need
+
+\[
+	\mathbb{E}[e_{ij_2t} \mid X_i, j_1] = 0 
+\]
+
+Potentially most problematic are the corresponding assumptions that 
+
+\[
+	\mathbb{E}[r_{ij_2} \mid j_1, \, X_i] = \mathbb{E}[r_{ij_2}] \textrm{ and } \mathbb{E}[u_{j_2} \mid j_1, \, X_i] = \mathbb{E}[u_{j_2}] 
+\]
+
+Unless students are randomly assigned to period two teachers, it seems likely that this will not hold, for a variety of reasons. For example, student's period one teacher assignment may affect their performance in that period, and then assignment in period two may be sorted based on performance, or on other characteristics primarily arising from the interaction between the student and the teacher in period one. 
+
+
+
+% \section*{Step 1 - Evaluating the Impact of Teacher's on Grading Practices}
+
+% Here, we initially adapt from model 5c in Allensworth and Luppescu (2018). This includes the following
+% \begin{align*}
+% 	Y_{ijkl} & = \beta_{0jkl} + \beta_{n}W_{ni}+\beta_{p}W_{pi}+e_{ijkl} \tag{Level 1}\\
+% 	\beta_{0jkl} & = \theta_0 + \pi_{m}a_{mj}+\pi_{3}EPAS_j+\pi_4(Days\,absent)_j+u_{000j}+v_{000k}+o_{000l} \tag{Level 2}
+% \end{align*}
+% Leading to the combined model given by
+% \begin{align*}
+% 	Y_{ijkl} & = \theta_0 + \pi_{m}a_{mj}+\pi_{3}EPAS_j+\pi_4(Days\,absent)_j+\beta_{n}W_{ni}+\beta_{p}W_{pi}\\
+% 		& + u_{000j}+v_{000k}+o_{000l}+e_{ijkl} \tag{Combined}
+% \end{align*}
+% Here, we have:
+% \begin{itemize}
+% 	\item $Y_{ijk}$ the grade of student $j$ in class $i$, taught by teacher $k$ in school $l$
+% 	\item $\theta_0$ the grand mean of student grades
+% 	\item $\pi_{m}a_{m_j}$ coefficient and variable, respectively, representing $m$ student level characteristics
+% 	\item $\pi_3EPAS_j$, $\pi_4(Days\,absent)_j$, coefficient and variable representing the students scores on $EPAS$ exams and student attendance, respectively
+% 	\item $\beta_n$, $W_{ni}$ is a vector of $n$ course characteristics for course $i$ and their corresponding coefficients
+% 	\item $\beta_p$, $W_{pi}$ is a vector of $p$ indicator variables for course type and their corresponding coefficients
+% 	\item $u_{000j}$ random effect of student $i$
+% 	\item $v_{000k}$ random effect of teacher $k$
+% 	\item $o_{000l}$ random effect of school $l$
+% 	\item $e_{ijkl}$ within student-class residual 
+% \end{itemize}
+
+% This model provides an excellent foundation, from which we develop a few potential extensions. 
+
+% \subsection*{Forward Lagging} 
+
+% For our research questions, we wish to explore the unique impact one teacher has on each student's grading outcomes, in a way that is uncorrelated with other visible pathways 
+% towards long term success, such as great academic achievement later on. For this purpose, we may wish to control for both prior and posterior achievement of students after 9th grade. In the original model, this is done to some extent by adding controls for 8th grade test scores and for all high school tests taken. We wish to expand on this by adding controls for subject level grade in the previous and proximal year, leading to the model:
+
+% \begin{align*}
+% 	Y_{ijkl} & = \theta_0 + \pi_{m}a_{mj}+\pi_{3}EPAS_j+\pi_4(Days\,absent)_j\\
+% 	& + \sum_{s =1}^{p} W_{pi}\left[\beta_{5p}(Prior\,GPA)_{pj}+\beta_{6p}(Post\,GPA)_{pj}\right]\\\
+% 	& + \beta_{n}W_{ni}+\beta_{p}W_{pi} + u_{000j}+v_{000k}+o_{000l}+e_{ijkl} \tag{Combined 2} 
+% \end{align*}
+
+% where $\beta_{5p}(Prior\,GPA)_{pj}$ is the variable and corresponding coefficient refering to the grade in subject $p$ during the prior year, and $\beta_{6p}(Post\,GPA)_{pj}$ is defined analogously
+
+\end{document}
+
+

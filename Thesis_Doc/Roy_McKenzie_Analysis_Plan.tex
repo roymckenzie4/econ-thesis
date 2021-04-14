@@ -1,0 +1,55 @@
+\documentclass{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs,dcolumn}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{fancyhdr}
+\usepackage{pdflscape}
+\usepackage{setspace}
+\usepackage{framed} 
+\pagestyle{fancy}
+\usepackage{graphicx}
+\lhead{Updated Analysis Plan}
+\rhead{Roy McKenzie}
+\setlength\parindent{0pt}
+
+\begin{document}
+
+\section*{Updated Analysis Plan}
+
+\subsection*{Primary Analysis}
+
+\textbf{RQ1:} \textit{How can we best quantify a teacher grading patterns, in a way that reflects a teacher’s impact on a student’s grade outside of observable impacts on educational outcomes?} \\
+
+Let $j(it)$ represent the teacher assigned to student $i$ in time $t$. Then, the main equation to estimate the idiosyncratic component of student grading is given by
+
+\begin{equation}
+	g_{it} - g_{i,t+1} = \nu_{j(it)} + \beta X_{it} + \varepsilon_{it}
+\end{equation}
+
+where $g_{it}$ and $g_{i,t+1}$ represents student $i'$ grades in period $t$ and $t+1$ respectively, $X_{it}$ represents a vector of student and school level control variables, including demographic information and measures of prior performance. Under the assumptions given in the text, this represents, on average, the component of the grades given by teacher $j(it)$ which was unrelated to student learning as measured in year $t+1$. \\
+
+We first will separate the data by subject and estimate this model separately for each of the four core classes (English, Math, Science, and Social Studies) using OLS. We then will examine the robustness of this estimation using an empirical Bayes methodology, treating the idiosyncratic component of teacher grading as a random effect. \\
+
+\textbf{RQ2:} \textit{What effect does assignment to teachers with varying impact have on a student’s outcomes? Does being assigned to a teacher with a high or low positive grade effect during freshman year have an observable impact on high school graduation, college enrollment, or other important outcomes? } \\
+
+To evaluate this second research question, we will estimate several regressions using high school graduation, college enrollment, and other observable measures of student success as outcomes. We will construct several independent variables from the grading effect measure constructed previously, using measures both of (i) the average grading effect of a student's teachers in their freshman year core courses, (ii) indicators for if a student was assigned to a teacher with a particularly high or low grading effect their freshman year, and (iii) relative measures of the teacher grading effect of a student’s freshman year teachers as compared to their within-school peers. This provides an initial descriptive measure of the correlation between these idiosyncratic grading effects and later outcomes. Following Chetty (2014), I also will use a ``teacher-switching'' quasi-experimental design to examine if trends in student grades follow our predictions when a teacher with an unusually high or low grading effect enters a new school setting.
+
+\subsection*{Robustness Checks}
+
+Since our theoretical argument rests on several relatively strong assumptions, we will additionally provide a few further tests and descriptives to reinforce the validity of our results, as well as to provide further clarity. \\
+
+\subsubsection*{Comparison with Other Measures of Teacher Value-Added}
+
+In order to better situate our paper within the current teacher value-added literature, we will also estimate a more traditional teacher-value added score using test scores as an outcome for the teachers in our sample and examine the correlation with our idiosyncratic score. In addition, we will also measure a traditional value-added score using attendance as an outcome and examine the correlation with our idiosyncratic score, in an attempt to identify the extent to which persistent trends idiosyncratic component of teacher grading may be linked to a higher ability of certain teachers to increase student engagement in the classroom. 
+
+\subsubsection*{Balance Tests for Period $t+1$}
+
+In order to support Assumption 3, which states that teachers in period $t+1$ are not assigned to student based on the characteristics of their teacher in period $t$, we will run several balance tests, attempting to detect if there are any observable characteristics of period $t$ teachers which seem to predict the teacher their students will have the following year. 
+
+\subsubsection*{Robustness to Structural Assumption}
+
+In order to justify Assumption 1, which specifies a structural model for human capital accumulation, we will reestimate our model using varying coefficients for the amount which prior human capital impacts human capital assumption, testing if our results are robust under these new specifications. 
+
+
+\end{document}
