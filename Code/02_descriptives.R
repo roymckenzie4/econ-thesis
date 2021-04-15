@@ -60,7 +60,7 @@ tbl_summary(temp, sort = list(everything() ~ "frequency"),
             statistic = list(all_continuous() ~ "{mean} ({sd})"),
             digits = list(all_continuous() ~ 2),type = c("age" ~ "continuous"),
             label = c("age" ~ "Age at Start of Freshmen Year"), missing_text = "Missing") %>% 
-  as_hux_table() %>% huxtable::print_latex()
+  as_hux_table() %>% huxtable::quick_latex("")
 
 ### 4b. Prior Performance Descriptives
 tbl_summary(
