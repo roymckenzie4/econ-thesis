@@ -1,55 +1,4 @@
-\documentclass{article}
-\usepackage{knitr}
-\newcommand{\SweaveOpts}[1]{}  % do not interfere with LaTeX
-\newcommand{\SweaveInput}[1]{} % because they are not real TeX commands
-\newcommand{\Sexpr}[1]{}       % will only be parsed by R
-
-
-\usepackage[utf8]{inputenc}
-\usepackage[left=1in, right=1in, top=1in, bottom=1in]{geometry}
-\usepackage{lipsum}
-\usepackage{titling}
-\usepackage{amsmath}
-\usepackage{fancyhdr}
-\usepackage{setspace}
-\usepackage{framed} 
-\pagestyle{fancy}
-\usepackage{amsmath, amsthm, amssymb, amsfonts, mathtools, xfrac, mathrsfs, tikz}
-\usepackage{enumerate}
-\usepackage{graphicx,dsfont, float}
-\usepackage{braket, bm}
-\usepackage{bbold}
-\usepackage{setspace}
-
-\usepackage{titlesec}
-
-
-\renewcommand{\thesection}{\Roman{section}} 
-\renewcommand{\thesubsection}{\thesection.\Roman{subsection}}
-
-\titleformat{\section}
-  {\large\center\bfseries}{\thesection.}{.5em}{}
-\titlespacing{\section}{0em}{.5em}{.5em}
-\titleformat{\subsection}
-  {\normalsize\center\itshape}{}{0em}{}
-\titlespacing{\subsection}{0em}{.5em}{.5em}
-
-\usepackage{natbib}
-\bibliographystyle{abbrvnat}
-\setcitestyle{authoryear,open={(},close={)}}
-
-\title{Teacher Grading and Value-Added:
-\\Evidence from Chicago}
-\author{Roy McKenzie}
-
-\lhead{}
-
-
-
-
-\begin{document}
-
-
+\documentclass[../main.tex]{subfiles}
 \doublespacing
 \section{Conceptual and Statistical Framework}
 \label{section:framework}
@@ -172,5 +121,3 @@ From here, two additional assumptions are required for the identification of $\n
 % 	g_{ijt}-g_{ik,t+1} = \alpha_{j} + \alpha_{k} + \beta X_{i,t+1}
 % \end{equation}
 % where $\alpha_{j}$ and $\alpha_{k}$ represent teacher $j$ and $k$ fixed effects, respectively.s
-\bibliographystyle{abbrvnat}
-\end{document}

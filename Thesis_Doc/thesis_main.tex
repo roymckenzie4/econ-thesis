@@ -1,7 +1,6 @@
 \documentclass{article}\usepackage{knitr}
 \usepackage[utf8]{inputenc}
 \usepackage[left=1in, right=1in, top=1in, bottom=1in]{geometry}
-\usepackage{lipsum}
 \usepackage{titling}
 \usepackage{amsmath}
 \usepackage{fancyhdr}
@@ -16,6 +15,7 @@
 \usepackage{setspace}
 
 \usepackage{titlesec}
+\usepackage{subfiles}
 
 
 \renewcommand{\thesection}{\Roman{section}} 
@@ -70,8 +70,6 @@ MAY 2021
 \end{center}
 
 
-
-
 \end{titlepage}
 
 \doublespace
@@ -84,207 +82,14 @@ This thesis explores how variations in the idiosyncratic grading practices of di
 \newpage
 
 
-
 % Section 1
-
-
-
-\doublespacing
-\section{Introduction}
-
-Grades represent one of the most widely used methods for evaluating student achievement in K-12 education. Not only are they a near constantly considered outcome in K-12 schools, prior research has shown that GPA is a powerful predictor of long-term student success (\citealt{allensworthHighSchoolGPAs2020, eastonPredictivePowerNinthGrade2017}). Nevertheless, there remains tension around the use of grades as a key metric by which to evaluate student achievement, with some education professionals and policymakers concerned that grading practices and the standards of success could vary wildly between teachers or schools (\citealt{gershensonGradeInflationHigh2018}). If true, then grades are an at-best unreliable indicator of student learning, and caution should be exercised in the use of grades as an evaluative tool. 
-
-Due to this tension, there is great policy relevance in understanding the extent that observed variation in student grades consists of variation in teacher grading practices, which are not themselves related to student learning. If this effect can be identified and controlled for, it could increase the reliability of students' grades as both a measure of achievement and a predictor of long-term success. The challenge arises, however, is parsing the extent to which this grading effect is truly idiosyncratic, and the extent to which it captures other non-observable determinants of student achievement (such as attitude or engagement) which themselves go beyond mastery of the content. 
-
-The setting of Chicago Public Schools (CPS) provides the perfect setting in which to explore these questions. With more than 20,000 teachers and 350,000 students, distributed over 500 schools, CPS provides a setting of both adequate variation among schools, teachers, and students, within a homogeneous district-wide setting to allow for productive empirical analysis. In a previous analysis, \citet{allensworthWhyStudentsGet2018} found that even after adding numerous controls for observable determinants of student grades, a significant portion of between-teacher grading variation remained. The richness and size of the data allow us to estimate and quasi-experimentally evaluate a structural model of teacher grading practices, allowing for the underlying causes of this remaining variation to be examined in a new light. 
-
-In the initial step of the analysis, I develop a strategy to identify the idiosyncratic grading practices of individual teachers. Specifically, I develop a theoretical argument to identify the \textit{teacher grading effect}, as the component of a teacher's students' grades that is not linked to increases in human capital. An important note: this argument does not explain the reasons for the existence of this effect, nor does it try. This could either be ``grade inflation'' in the colloquial sense, or it could be related to other aspects of the student-teacher relationship which, while not connected with the actual learning of the material, could still very much be due to circumstances within the classroom. 
-
-I next provide a statistical methodology to estimate these effects using longitudinal CPS data, using a sample of CPS freshman from school years 2010-2011 to 2013-2014. For every core (mathematics, science, social studies, or readings) teacher in this sample, I then calculate their individual teacher grading effect using a variety of both fixed- and mixed-effects models, following OLS and empirical Bayes procedures respectively to generate numerical estimates of these scores. I then use these estimates in a variety of model specifications to analyze the impact that variation in teacher grading effects has on later high school GPA, high school graduation, college enrollment, and college graduation, using a variety of independent variables derived from the teacher grading effect estimates. These include the average teacher grading effect in core courses during a student's freshman year, relative measures of the teacher grading effect of a student's freshman year teachers as compared to their within-school peers, and indicators of whether or not a student had an unusually high positive or negative grading effect teacher at any point during their freshman year.
-
-Building on \citet{gilraineMakingTeachingLast2020}, my identification argument for the teacher grading effects rests on three primary assumptions: (1) random assignment of teachers in freshman year, (2) random assignment of teachers in sophomore year, and (3) a functional assumption on the human capital accumulation process. Thus, in addition to my primary analysis, I also conduct several tests to attempt to provide additional evidence for each of these assumptions. For the random assignment assumption, I run a panel of balance tests on observable teacher and student characteristics for both freshman and sophomore year teachers to attempt to identify any sorting based on student or prior teacher characteristics. For the functional form assumption, I run a specification test examining the degree to which my results are robust to variation in the depreciation of human capital. Finally, to test the overall validity of the theoretic framework, I also run a ``movers'' design - effectively an event study on teacher switching within CPS - to examine the extent to which estimated teacher grading effects can predict real changes in student grades under quasi-experimental variation. 
-
-The structure of the paper is as follows. In Section \ref{section:lit}, I detail the relevant literature to our analysis. In Section \ref{section:framework}, I present both the theoretical and statistical framework for the primary analyses. In Section \ref{section:data}, I detail the data used for the analysis and the construction of the analytic sample. In Section V (forthcoming), I detail the results of the primary analyses, and in Section VI (forthcoming), I highlight the results of the empirical tests on the assumptions. Finally, Section VII (forthcoming) concludes the paper. 
-
+\subfile{Sec/Sec1}
 % Section 2
-
-
-
-\doublespacing
-\section{Relevant Literature}
-\label{section:lit}
-
-This paper is well-grounded in prior work in both education and in economics. In education, there have been several studies analyzing grades as a student outcomes; both their predictive ability and reliability, as well as their potential shortcomings. As cited above, particularly relevant to this thesis are several papers from the Chicago Consortium on School Research examining grades in the context of Chicago Public Schools. \citet{eastonPredictivePowerNinthGrade2017}, for example, find that freshman year GPA is a powerful predictor of student outcomes, much more powerful, in fact, than test scores. This paper also acknowledges, however, that the reason grades so strongly signal later success is not explained, and hypothesizes that they may be measuring other unobserved components of student achievement such as effort, behavior, attendance, or attitude. As a follow up to this study, \citet{allensworthWhyStudentsGet2018} attempt to analyze the components which contribute to the grades students' receive. While they confirm that including factors such as attendance in a model of grades greatly reduces the amount of between-teacher variation in grading effect, they also acknowledge that there is a significant component of this variation which remains unaccounted for. This paper attempts to add to this literature by further quantifying that effect and examining how it affects student outcomes. While we are still unable to precisely explain the unobservables which may be contributing to this, the analysis in this paper provides a better picture of how this remaining variation functions in practice, laying the groundwork for further research to examine the pathways by which grading is related to student outcomes. 
-
-In economics, this paper is rooted well within the empirical literature on human capital accumulation, and, specifically, research on teacher value added models (VAM), such as \citet{chettyMeasuringImpactsTeachers2014}, \citet{kaneEstimatingTeacherImpacts2008}, or \citet{jacksonTeacherEffectsTeacherRelated2014}. These papers exploit the fact that teachers see different cohorts of students each year to estimate the actual educational impact a teacher has on their students. While this is in some ways the opposite of attempting to estimate the non-educational aspects of grades, this literature still provides a theoretical and empirical framework for examining grading patterns and the relationships between teachers and students which I here incorporate into my models. The specific framework I employ is most closely related to \citet{gilraineMakingTeachingLast2020}, which identifies both a transitory ``short-run'' and a permanent ``long-run'' component of traditional teacher value-add. This paper adapts the identification argument required to separate these two effects to identify instead the extent to which students' grades measure the transitory effect of idiosyncratic teacher grading versus the more long-term impact of actual gains in student achievement. Empirically, this paper strives to use a wide array of rigorous econometric methods both to identify teacher grading impact and to verify our assumptions in the data; to this extent, I  build off prior empirical work by \citet{abdulkadirogluChartersLotteriesTesting2016} and \citet{kolesarIdentificationInferenceMany2015}.
-
-
+\subfile{Sec/Sec2}
 % Section 3
-
-
-
-\doublespacing
-\section{Conceptual and Statistical Framework}
-\label{section:framework}
-
-In the following section, we provide both a theoretical and an empirical framework for decomposing student grades into temporary teacher grading effects versus lasting gains in student achievement. 
-
-\subsection{Teacher Grading Effect Estimation - Theoretical Framework}
-
-Here we present a simple, structural model of human capital accumulation and teacher grading. Let $j(it)$ represent the teacher assigned to student $i$ in period $t$. This teacher teaches one class per year, and the set of available teachers in each period is disjoint.
-
-As the start of period $t$, student $i$'s level of human capital is given by $h_{i,t-1}$. After period $t$, student $i$'s level of human capital has evolved to $h_{it}$. We make the following structural assumption:
-
-\bigskip 
-\noindent\fbox{%
-	\parbox{\textwidth}{%
-		\textbf{Assumption 1 (Additivity):} Assume the law of motion for human capital has a form given by 
-			\[
-				h_{it} = h_{i,t-1} + \gamma_{j(it)} 
-			\]
-		where $\gamma_{j(it)}$ is teacher $j(it)$'s ``value-added'' effect on student learning. 
-	}%
-}\\
-
-% NOTE: Here we are ALSO (subtly) assuming that value added is constant for a given teacher. 
-
-\noindent After the student's human capital is augmented, they are then assigned a grade based on two factors:
-\begin{itemize}
-	\item The amount of human capital at the end of the period, $h_{it}$
-	\item Teacher $j(it)$'s idiosyncratic teacher grading effect, $\nu_{j(it)}$
-\end{itemize}
-Variation is the student's grade aside from these factors is then incorporated into $\varepsilon_{it}$, the remaining within-student residual. Student $i$'s grade in period $t$ after being assigned to teacher $j(it)$ is thus given by:
-\begin{equation}
-\begin{split}
- 	g_{it} & = h_{it}+\nu_{j(it)}+\varepsilon_{it}\\
-\end{split}
-\end{equation}
-Here, $\nu_{j(it)}$ can be thought of as the component of teacher $j$'s grading practice which is not linked to student understanding of the material, and is thus independent from $h_{i,t}$. Using Assumption $1$, we then can rewrite the grade equation as 
-\begin{equation}
-\begin{split}
-	\label{eqn:grade_eqn}
- 	g_{it} & = h_{it}+\nu_{j(it)}+\varepsilon_{it}\\\
- 	& = (h_{i,t-1} + \gamma_{j(it)}) + \nu_{j(it)} + \varepsilon_{it}
-\end{split}
-\end{equation}
-This version of the grade equation has a very intuitive interpretation: we can think of $h_{i,t-1}$ as the ex-ante grade we would expect student $i$ to receive in period $t$. This is then altered by (1) the actual amount the student learns in period $t$, $\gamma_{j(it)}$, (2) the teacher's idiosyncratic grading effect, $\nu_{j(it)}$, and (3) other unobservable predictors of student grades, given by $\varepsilon_{it}$. 
-% QUESTION: Is it better to treat $\varepsilon_{ijt}$ as a shock to grading, or to human capital accumulation?
-% Roy's answer: Doesn't actually make any difference, and as a shock to grading is probably more consistent. Might matter more if we looked at more than two periods?
-
-This equation, however, does not leave us with the ability to separate a teacher's value-added affect on student learning, $\gamma_{j(it)}$, from their idiosyncratic grading effect, $\nu_{j(it)}$. 
-% QUESTION: Could we somehow esimtate $\nu_j$ separately using traditional value add measures (namely, test scores), and see if our results are consistent?
-To address this issue, we can difference grades across periods $t$ and $t+1$. Intuitively, period $t$ gains in human capital should be evidenced in period $t+1$ grades, so this differencing should allow us to get closer to the idiosyncratic grading effects in period $t$. Mathematically, we see that
-\begin{align}
-\begin{split}
-	\label{eqn:difference}
-	g_{it}-g_{i,t+1} & = 
-	[h_{it}+\nu_{j(it)}+\varepsilon_{it}] 
-	- [h_{i,t+1} + \nu_{j(i,t+1)} + \varepsilon_{i,t+1}]\\
-	& = [h_{it}+\nu_{j(it)}+\varepsilon_{it}]  -
-	[h_{it}+\gamma_{j(i,t+1)}+\nu_{j(i,t+1)} + \varepsilon_{i,t+1}]\\
-	& = \nu_{j(it)} - [\gamma_{j(i,t+1)} + \nu_{j(i,t+1)}] - [\varepsilon_{i,t+1}-\varepsilon_{it}]
-\end{split}
-\end{align}
-Next, to help ensure that the parameter of interest $\nu_{j(it}$ is uncorrelated with the remaining within student residuals from equation (\ref{eqn:difference}), we project them onto $X_{it}$, a vector of student observables:
-\begin{equation}
-	-[\varepsilon_{i,t+1}-\varepsilon_{it}] = \beta_1 X_{it} + e_{it}
-\end{equation}
-In our setting, $X_{it}$ represents the observable components of student achievement in our data, such as student demographic characteristics and performance and attendance prior to period $t$. In addition to being correlated with unobserved predictors of student outcomes, these factors may also be correlated with the grading and teaching characteristics of a student's assigned teacher in period $t+1$, $\gamma_{j(i,t+1)}$ and $\nu_{j(i,t+1)}$. Thus, we also project these onto $X_{it}$:
-\begin{equation}
-	-[\gamma_{j(i,t+1)}+\nu_{j(i,t+1)}] = \beta_2 X_{it} + u_{it}
-\end{equation}
-Using these two projections, we can then rewrite equation (\ref{eqn:difference}) as 
-\begin{equation}
-	\label{eqn:final}
-	g_{it}-g_{i,t+1}=\nu_{j(it)} + (\beta_1 + \beta_2) X_{it} + e_{it} + u_{it} 
-\end{equation}
-From here, two additional assumptions are required for the identification of $\nu_{j(it)}$:
-
-\bigskip
-\noindent\fbox{%
-	\parbox{\textwidth}{%{}
-		\textbf{Assumption 2 (Random Assignment of Teacher $j(it)$):} Assume that 
-		\[
-			\mathbb{E}[e_{it} \mid j(it)] = \mathbb{E}[e_{it}] = 0 
-		\]
-	That is, students are not sorted to their period $t$ teacher based on unobservable determinants of a student's grade.
-	}
-}
-\bigskip
-
-\bigskip
-\noindent\fbox{%
-	\parbox{\textwidth}{%
-		\textbf{Assumption 3 (Random Assignment of Teacher $j(i,t+1)$):} Assume that 
-		\[
-			\mathbb{E}[u_{it} \mid j(it)] = \mathbb{E}[u_{it}] = 0
-		\]
-	This assumption implies that the characteristics of a student's teacher in period $t+1$ which are not predicted by student observables are not related to determined by their teacher assignment in period $t$.
-	}
-}
-\bigskip
-
-\noindent These assumptions ensure that our error term in equation (\ref{eqn:final}) is uncorrelated with our predictors, implying that $\nu_{j(it)}$, our parameter of interest, is identified under regression. 
-
-% Since $X_{it}$ is observed for each student assigned to $j(it)$, we have now have identified our idiosyncratic grading effect of teacher $j$, $\nu_j$, in terms of observable components. To estimate the appropriate $\beta$, we follow the literature (\citealt{gilraineMakingTeachingLast2020}, \citetalt{chettyMeasuringImpactsTeachers2014}), and use between student variation to estimate 
-% \begin{equation}
-% 	g_{it}-g_{i,t+1} = \alpha_{j(it)} + \beta X_{it}
-% \end{equation}
-% Note that equation (\ref{eqn:final}) is equivalent to taking the expected value of the difference in test scores with observable characteristics removed:
-% \begin{equation}
-% 	\mathbb{E}[g_{it}-g_{i,t+1}-\beta X_{it} \mid j(it)] = \nu_{j(it)}
-% \end{equation} 
-
-
-% QUESTION: How does the Maryland paper work treating attendance in period $t$? THIS IS THE ONE IS TILL NEED TO ASK PETER.
-
-% \subsection{Estimation Procedure}
-
-% To estimate the teacher gradin,g effect $\nu_j$ in the data, we adopt a method comonly used in the teacher value-added literature. First, we follow \citet{chettyMeasuringImpactsTeachers2014} and remove observable characteristics from our grade outcomes by estimating the following equation using OLS
-% \begin{equation}
-% 	g_{ijt}-g_{ik,t+1} = \alpha_{j} + \alpha_{k} + \beta X_{i,t+1}
-% \end{equation}
-% where $\alpha_{j}$ and $\alpha_{k}$ represent teacher $j$ and $k$ fixed effects, respectively.s
-
+\subfile{Sec/Sec3}
 % Section 4
-
-
-\doublespacing
-
-\section{Data}
-\label{section:data}
-
-The data for our analysis are drawn from a longitudinal Chicago Public Schools administrative dataset for both students and teachers. The available data extends almost thirty years, but we focus on freshman cohorts from school years 2010-2011 to 2013-2014, and thus use data from school years 2009-2010 to 2019-2020 in order to include information on postsecondary enrollments. This dataset is particularly strong as it provides a near-comprehensive summary of nearly every aspect of the problem under consideration. In particular, we consider three levels of data:
-
-\subsection{1. Student Level} 
-
-The student level dataset contains information on every student enrolled at CPS in the time period under consideration, with one observation per student per year. These data form the base from which we construct and characterize our analytic sample. 
-
-\textit{Demographics.} The dataset contains detailed information on the gender, ethnicity, and age for all students in our sample, as well as information regarding if they qualified for special education, free and reduced lunch, or English-language learner status. 
-
-\textit{Educational Information.} The dataset links students with detailed information regarding their educational trajectory. For each year, we observe the school the student was enrolled in, the grade they were enrolled in, and their state-administered test scores for that year. In addition, upon a student leaving CPS, we record their reason for leaving (that is, graduating, dropping out, etc.)
-
-\textit{Post-Secondary Outcomes.} In addition to the CPS level information given above, we also merge in data from the National School Clearinghouse dataset, which provides information on the post-secondary outcomes of the CPS students in our sample. This includes the dates and schools of a students higher education enrollments for ten years after high school graduation, as well as the date of college exit and degrees received (if any). This dataset allows us to look at outcomes beyond the high school level. 
-
-\subsection{2. Class Level}
-
-The class level dataset details, for each student, all of the classes which they took in a given semester. The dataset also links students with information on the classes in which they were enrolled each semester. 
-
-\textit{Descriptive.} The dataset includes descriptive information on each class, including the subject, level, and period of the day in which the class occurred. This allows for several of the most important controls used in our analysis, and also allows us to track student outcomes in a single subject over time. 
-
-\textit{Student Performance.} The dataset also contains several measures of student performance and engagement in the class; namely, both mid-semester and final grades, as well as the number of absences accrued by the student in that class that semester. 
-
-\textit{Teacher Information.} The class level dataset also links each class to the unique teacher ID of the instructor for that course. 
-
-\subsection{3. Teacher Level} 
-
-Our final dataset is at the teacher level, containing descriptive and demographic information for each CPS teacher. As mentioned above, this dataset can be linked to the class level dataset by means of the teacher ID. For CPS, however, the quality of teacher IDs is less rigorously maintained than that of students IDs. Thus, we employ a fuzzy matching procedure to better link our teacher level data with the corresponding class level data. 
-
-\subsection{Sample Construction}
-
-We construct our sample using the three datasets listed above. As stated above, we limit our analysis to students from the freshman cohorts in school years 2010-2011 to 2013-2014. For the class level dataset, we limit our sample to enrollments in core classes - mathematics, science, reading, or social studies. We include several other controls to filter out errors in the underlying data: for example, we filter on the number of students a given teacher sees in a given year, the number of classes a student is enrolled in, and student age. 
-
-For the purpose of the analysis, we also require students to have been enrolled in both the year prior to and the year after their freshman year. In order for our estimates to be consistent, we also require that the student was in eighth grade the previous year and tenth grade the following year. While this precludes students who follow a non-traditional educational path, it is required for our estimates of teacher grading effect to hold across the cohort. 
+\subfile{Sec/Sec4}
 
 
 \newpage 
