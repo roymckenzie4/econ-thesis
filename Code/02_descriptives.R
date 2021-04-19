@@ -12,17 +12,25 @@
 
 ### 1. Load Libraries and utility functions
 library(tidyverse)
+library(scales)
+library(reshape2)
 library(haven)
 library(dplyr)
 library(janitor)
+library(kableExtra)
 library(stringr)
 library(stargazer)
 library(xtable)
 library(compareGroups)
 library(scales)
 library(reporttools)
+library(ggplot2)
 library(gtsummary)
 library(gt)
+
+theme_set(theme_minimal())
+
+
 
 ### 2. Load Data to Compare
 analytic_cohort <- read_rds("../Output/analytic_cohort.rds") %>%
@@ -50,31 +58,44 @@ temp <- analytic_cohort %>%
     cRace, 
     cGender,
     PBPOV, 
+    freshCohort,
     age
   ) %>%
   mutate(
     PBPOV = 100*PBPOV,
     age = as.numeric(as.character(age))
   )
+sink("../Output/table_demographics.tex", type = c("output"))
 tbl_summary(temp, sort = list(everything() ~ "frequency"),
             statistic = list(all_continuous() ~ "{mean} ({sd})"),
             digits = list(all_continuous() ~ 2),type = c("age" ~ "continuous"),
-            label = c("age" ~ "Age at Start of Freshmen Year"), missing_text = "Missing") %>% 
-  as_hux_table() %>% huxtable::quick_latex("")
+            label = c("age" ~ "Age at Start of Freshmen Year",
+                      "freshCohort" ~ "Fall of Freshmen Year"), 
+            missing_text = "Missing",
+            by = freshCohort) %>% 
+  modify_caption("Demographics by Freshman Cohort") %>%
+  as_hux_table() %>% huxtable::print_latex() 
+sink()
 
 ### 4b. Prior Performance Descriptives
+sink("../Output/table_eigth_grade.tex")
 tbl_summary(
-  analytic_cohort, include = c("MATH_Z", "READ_Z", "rnoAttend", "n_infractions_grade_8"),
+  analytic_cohort, include = c("MATH_Z", "READ_Z", "rnoAttend", "n_infractions_grade_8", "freshCohort"),
   statistic = list(all_continuous() ~ "{mean} ({sd})"),
   digits = list(all_continuous() ~ 2), 
   label = c("MATH_Z" ~ "8th Grade Math Score (Standardized)", "READ_Z" ~ "8th Grade Reading Score (Standardized)",
             "rnoAttend" ~ "8th Grade Attendance (Fraction of Days Attended)",
-            "n_infractions_grade_8" ~ "8th Grade Discipline (no. of infractions)"), 
-  missing_text = "Missing"
-) %>% as_hux_table() %>% huxtable::print_latex()
+            "n_infractions_grade_8" ~ "8th Grade Discipline (no. of infractions)",
+            "freshCohort" ~ "Fall of Freshman Year"), 
+  by = freshCohort, 
+  missing_text = "Missing") %>% 
+  modify_caption("8th Grade Outcomes by Cohorts") %>%
+  as_hux_table() %>% huxtable::print_latex()
+sink()
 
 ### 4c. Class Data
 temp <- analytic_dataset %>%
+  group_by(FRESH_COHORT_YEAR) %>%
   summarize(
     `Number of Students` = length(unique(SID)),
     `Number of Teachers` = length(unique(TID)),
@@ -83,7 +104,83 @@ temp <- analytic_dataset %>%
     `Reading Grades` = sum(subject == "English"),
     `Social Studies Grades` = sum(subject == "Social Studies"), 
     `Science Grades` = sum(subject == "Science")
+  ) %>% t() %>%
+  row_to_names(row_number = 1)
+  
+kable(temp, format = "latex", caption = "Frequencies of Grade Variables by Freshman Cohort", 
+      label = "table_freq", booktabs = T, linesep = c("", "", "\\addlinespace", "", "", "", "")
+) %>% save_kable("../Output/table_freq.tex")
+
+### 4d. Descriptives on Grades
+### Table 1 - Average Grade in Each Class Over Time 
+temp <- analytic_dataset %>%
+  group_by(FRESH_COHORT_YEAR, subject) %>%
+  summarize(
+    mean_fall_gpa = format(mean(SOPH_FALL_GPA), digits = 2, nsmall = 2),
+    sd_fall_gpa = format(sd(SOPH_FALL_GPA), digits = 2, nsmall = 2),
+    mean_spring_gpa = format(mean(FRESH_SPRING_GPA), digits = 2, nsmall = 2),
+    sd_spring_gpa = format(sd(FRESH_SPRING_GPA), digits = 2, nsmall = 2),
+    mean_diff = format(mean(grade_difference), digits = 2, nsmall = 2),
+    sd_diff = format(sd(grade_difference), digits = 2, nsmall = 2)
   ) %>%
-  t()
-xtable(temp, caption = "Descriptives of Grade Data") %>%
-  print.xtable(include.colnames = FALSE) 
+  mutate(
+    mean_spring_gpa = paste0(mean_spring_gpa, " (", sd_spring_gpa, ")"),
+    mean_fall_gpa = paste0(mean_fall_gpa, " (", sd_fall_gpa, ")"),
+    mean_diff = paste0(mean_diff, " (", sd_diff, ")")
+  ) %>%
+  select(-starts_with("sd")) %>%
+  ungroup()
+
+kable(temp, format = "latex", digits = 2, booktabs = T,
+      col.names = c("", "", "Freshman Spring", "Sophmore Fall", "Difference"),
+      caption = "Mean Grade (Weighted) Over Time by Cohort, Subject",
+      align = c("l", "l", "c", "c", "c"), 
+      label = "table_grade_desc") %>%
+  kable_styling(latex_options = "hold_position") %>%
+  column_spec(1, bold = TRUE) %>%
+  collapse_rows(columns = 1, latex_hline = "major") %>%
+  save_kable("../Output/table_grade_desc.tex")
+
+### Table 2 - Correlation Between Fall and Spring Grades (Math)
+temp <- analytic_dataset %>%
+  filter(subject == "Math") %>%
+  select(
+    FRESH_SPRING_FMK, 
+    SOPH_FALL_FMK
+  ) %>%
+  table() %>%
+  prop.table(margin = 1)%>%
+  melt() 
+
+g1 <- ggplot(temp, aes(FRESH_SPRING_FMK, SOPH_FALL_FMK)) + 
+  geom_tile(aes(fill = value)) +
+  geom_text(aes(label = percent(value, accuracy = 1))) +
+  scale_fill_gradient2(low = muted("red"), mid = "white", high = muted("blue")) + 
+  coord_flip() +
+  xlab("Grade Freshman Spring") + 
+  ylab("Grade Sophmore Fall") + 
+  scale_y_discrete(position = "right", limits = rev(levels(temp$SOPH_FALL_FMK))) +
+  theme(legend.position = "none") 
+ggsave("../Output/grade_comp_math.png", plot = g1)
+
+                       
+temp <- analytic_dataset %>%
+  filter(subject == "English") %>%
+  select(
+    FRESH_SPRING_FMK, 
+    SOPH_FALL_FMK
+  ) %>%
+  table() %>%
+  prop.table(margin = 1)%>%
+  melt() 
+
+g2 <- ggplot(temp, aes(FRESH_SPRING_FMK, SOPH_FALL_FMK)) + 
+  geom_tile(aes(fill = value)) +
+  geom_text(aes(label = percent(value, accuracy = 1))) +
+  scale_fill_gradient2(low = muted("red"), mid = "white", high = muted("blue")) + 
+  coord_flip() +
+  xlab("Grade Freshman Spring") + 
+  ylab("Grade Sophmore Fall") + 
+  scale_y_discrete(position = "right", limits = rev(levels(temp$SOPH_FALL_FMK))) +
+  theme(legend.position = "none")
+ggsave("../Output/grade_comp_eng.png", plot = g2)

@@ -28,6 +28,8 @@ year_list <- seq(first_year, last_year, 1)
 
 ### 3a. Load Freshmen cohorts for the years under consideration. 
 ###     This cohort makes up the base group for our analysis. 
+### Decision Rules:
+###     ? Using 2012 ACS to measure poverty (rather than 2015?)
 
 ### Do base Data Cleaning
 fclasses <- read.csv("/home/projects/To_and_Through/DATA/newFcohortsOutput/allFcohorts2020_2_9_21.csv") %>%
@@ -75,6 +77,7 @@ grades <- raw_grades %>%
   ) %>%
   # Numerically encode GPAs. Note, adjust the numeric GPA by Honor Level. 
   mutate(
+    FMK = ordered(FMK, levels = c("F", "D", "C", "B", "A"), exclude = c("/", "P")),
     GPA = factor(FMK, levels = c("/", "P", "A", "B", "C", "D", "F"), labels = c(NA, NA, 4, 3, 2, 1, 0)),
     GPA = as.numeric(as.character(GPA)),
     GPA = ifelse(LEVEL == "A" & (GPA > 1), GPA + 2, GPA),
@@ -135,7 +138,8 @@ fall_grades <- grades %>%
   select(
     SID, 
     FRESH_COHORT_YEAR,
-    SPRING_GPA = GPA, 
+    SOPH_FALL_GPA = GPA,
+    SOPH_FALL_FMK = FMK, 
     subject
   ) %>%
   filter(FRESH_COHORT_YEAR >= first_year & FRESH_COHORT_YEAR <= last_year)
@@ -149,7 +153,9 @@ spring_grades <- grades %>%
     FRESH_COHORT_YEAR = GRADE_YEAR_FALL
   ) %>%
   select(
-    SID, FRESH_COHORT_YEAR, GRADE_SCHLID, LEVEL, CN3, SECTION, TID, subject, FALL_GPA = GPA
+    SID, FRESH_COHORT_YEAR, GRADE_SCHLID, 
+    LEVEL, CN3, SECTION, TID, subject, FRESH_SPRING_GPA = GPA,
+    FRESH_SPRING_FMK = FMK
   ) %>%
   filter(FRESH_COHORT_YEAR >= first_year & FRESH_COHORT_YEAR <= last_year)
 
@@ -159,7 +165,7 @@ spring_grades <- grades %>%
 differenced_grades <- spring_grades %>%
   inner_join(fall_grades, by = c("SID", "FRESH_COHORT_YEAR", "subject")) %>%
   mutate(
-    grade_difference = SPRING_GPA - FALL_GPA
+    grade_difference = FRESH_SPRING_GPA - SOPH_FALL_GPA
   )
   
 
@@ -251,6 +257,10 @@ student_vals_raw <- fclasses %>%
   ) %>%
   left_join(test_data, by = c("SID", "freshCohort" = "YEAR")) %>%
   left_join(ages, by = c("SID", "freshCohort" = "YEAR"))
+student_vals_raw <- student_vals_raw %>%
+  mutate(
+    dFreshSped = ifelse(cSped == "None", 0, 1)
+  )
 
 ### 4b. Cleaning Cohort
 ### DATA DECISIONS (? means still to check):
@@ -263,12 +273,27 @@ student_vals_raw <- fclasses %>%
 ###     ? Drop freshmen dropout. This seems potentially an issue, but I don't see a way around it, for our 
 ###       analysis. Kind of has the same assumption as the above. 
 ###     ? Drop students who left during freshmen year. Same as above.
-###     ? Using 2012 ACS to measure poverty (rather than 2015?)
+
 
 student_vals <- student_vals_raw %>%
   filter(dInFreshmenDenominator == 1) %>%
   filter(dFreshDropOut == 0) %>%
   filter(dFreshValidLvRea == 0)
+
+### 4c. Filter for Incomplete Observations of main Variables
+### Decision Rules:
+###     ? Is this right? Drops around 3000.
+student_vals <- student_vals %>%
+  filter(!is.na(cRace) &
+         !is.na(cGender) &
+         !is.na(age) &
+         !is.na(rnoAttend) &
+         !is.na(n_infractions_grade_8) &
+         !is.na(MATH_Z) &
+         !is.na(READ_Z) &
+         !is.na(rnoCoreGpa) &
+         !is.na(cSped))
+
 
 ### 4c. Linking Individual Data to Grades Data
 ### Decision Rules:
@@ -279,6 +304,8 @@ analytic_dataset <- differenced_grades %>%
 analytic_cohort <- student_vals %>%
   filter(SID %in% analytic_dataset$SID)
 raw_cohort <- student_vals_raw 
+
+
 
 ### 5. Generate Class and School Level Controls
 

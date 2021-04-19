@@ -98,3 +98,35 @@ read_grades <- function(first_cohort, last_cohort) {
   return(grades)
 }
 
+### Section 2 - Other useful functions. 
+
+#' This function is the equivalent of dresiduals in Stata, which returns the data
+#' frame with residuals net of Teacher fixed effects. This is the Chetty style as well.
+#' Q: Is this right?
+#' 
+#' @param dataset Analytic dataset. 
+#' @param outcome The outcome we want demeaned. 
+#' @param controls Vector of controls (already pasted with +)
+#' @return The analytic dataset, but with the dresid style r residuals.  
+
+dresid <- function(dataset, outcome, controls) {
+  dataset <- dataset %>%
+    filter(across(.cols = outcome, .fns = ~ !is.na(.x)))
+  main_reg <- plm(paste0(outcome, " ~ ", controls),
+                  index = c("TID"),
+                  method = "between",
+                  data = dataset)
+  full_resid <- data.frame(temp_resid = main_reg$residuals)
+  fixed_effects <- fixef(main_reg, type = "dmean")
+  fixed_effects <- data.frame(TID = as.integer(as.character(names(fixed_effects))), 
+                              temp_value = fixed_effects, row.names = NULL) 
+  return_data <- dataset %>%
+    left_join(fixed_effects, by = "TID") %>%
+    cbind(full_resid) %>%
+    mutate(
+      "{outcome}_dresid" := temp_value + temp_resid
+    ) %>%
+    select(-c(temp_value, temp_resid))
+  
+  return(return_data)
+}
