@@ -36,7 +36,24 @@ analytic_dataset <- left_join(analytic_dataset, va_scores, by = c("TID", "subjec
 outcomes <- c("nAPCourses4yr", "dEarnRegDip4yr", "dFreshOnTrack", "highACT_EQUIV",
               "gradCumCoreGPA", "nHonorsCourses4yr")
 controls <- c("MATH_Z", "READ_Z", "cRace", "cGender", "age", "rnoAttend", 
-              "n_infractions_grade_8", "rnoCoreGpa", "dFreshSped")
+              "n_infractions_grade_8", "rnoCoreGpa", "dFreshSped",
+              "class_MATH_Z", "class_READ_Z", "class_age", "class_rnoAttend",
+              "class_n_infractions_grade_8", "class_rnoCoreGpa", "class_size",
+              "I(MATH_Z^2)", "I(READ_Z^2)", "I(age^2)", "I(rnoAttend^2)",
+              "I(n_infractions_grade_8^2)", "I(rnoCoreGpa^2)",
+              "I(MATH_Z^3)", "I(READ_Z^3)", "I(age^3)", "I(rnoAttend^3)",
+              "I(n_infractions_grade_8^3)", "I(rnoCoreGpa^3)",
+              "I(class_MATH_Z^2)", "I(class_READ_Z^2)", "I(class_age^2)", "I(class_rnoAttend^2)",
+              "I(class_n_infractions_grade_8^2)", "I(class_rnoCoreGpa^2)",
+              "I(class_MATH_Z^3)", "I(class_READ_Z^3)", "I(class_age^3)", "I(class_rnoAttend^3)",
+              "I(class_n_infractions_grade_8^3)", "I(class_rnoCoreGpa^3)",
+              "I(class_size^2)", "I(class_size^3)")
+controls <- c("MATH_Z", "READ_Z", "cRace", "cGender", "age", "rnoAttend",
+              "n_infractions_grade_8", "rnoCoreGpa", "dFreshSped",
+              "I(MATH_Z^2)", "I(READ_Z^2)", "I(age^2)", "I(rnoAttend^2)",
+              "I(n_infractions_grade_8^2)", "I(rnoCoreGpa^2)",
+              "I(MATH_Z^3)", "I(READ_Z^3)", "I(age^3)", "I(rnoAttend^3)",
+              "I(n_infractions_grade_8^3)", "I(rnoCoreGpa^3)")
 controls <- paste(controls, collapse = " + ")
 subjects <- c("Math", "English")
 
@@ -90,5 +107,9 @@ for(outcome in outcomes) {
   results <- rbind(results, results_this_outcome_df)
 }
 
+kable(results, format = "latex", booktabs = T, linesep = "")
 
+
+kable(results, format = "latex", booktabs = T, align = c("rccc")) %>%
+  save_kable("../Output/results.tex")
 

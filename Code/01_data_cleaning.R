@@ -30,18 +30,19 @@ year_list <- seq(first_year, last_year, 1)
 ###     This cohort makes up the base group for our analysis. 
 ### Decision Rules:
 ###     ? Using 2012 ACS to measure poverty (rather than 2015?)
+###     ? gradSchoolTypeNum6yr < 4 to drop charter/alternative students
 
 ### Do base Data Cleaning
 fclasses <- read.csv("/home/projects/To_and_Through/DATA/newFcohortsOutput/allFcohorts2020_2_9_21.csv") %>%
-  filter(freshCohort >= first_year & freshCohort <= last_year) 
-
-
+  filter(freshCohort >= first_year & freshCohort <= last_year) %>%
+  filter(gradSchoolTypeNum6yr < 4)
+  
 
 ### Add Census Data on Poverty
 census_data <- read_sas("/mnt/data/demographics/census/censb12.sas7bdat") %>%
   select(CENBLOCK10, PBPOV, PNWORKT)
 fclasses <- fclasses %>%
-  left_join(census_data, by = "CENBLOCK10")
+  left_join(census_data, by = "CENBLOCK10") 
   
 
 ### 3b. Load Grade Data. 
@@ -52,9 +53,7 @@ fclasses <- fclasses %>%
 ###     ? Limiting only to classes taken for credit. My hope is that this will provide a more
 ###       accurate sample of the courses we wish to consider. 
 ###     ? Account for level of class by adjusting numeric GPA encoding. ADDITIONALLY, not increasing 
-###       the value for a D or F (this is the way CPS does GPA calculations, but is it correct here?)
-###     ? For multiple teachers, I am just splitting as if the student was enrolled in the same class twice, 
-###       but with two different teachers. I think as long as we cluster standard errors at the right 
+###       the value for a D or F (this is the way CPS does GPA calculations, but is it correct here?) 
 
 ### Step 1. Using function read_grades (see utils.R for details)
 raw_grades <- read_grades(first_year, last_year + 1)
@@ -307,11 +306,21 @@ raw_cohort <- student_vals_raw
 
 
 
-### 5. Generate Class and School Level Controls
-
 ### 5a. Class Level Controls
-### TODO
+analytic_dataset <- analytic_dataset %>%
+  group_by(GRADE_SCHLID, TID, SECTION) %>%
+  mutate(
+    class_MATH_Z = mean(MATH_Z),
+    class_READ_Z = mean(READ_Z),
+    class_age = mean(age),
+    class_rnoAttend = mean(rnoAttend),
+    class_n_infractions_grade_8 = mean(n_infractions_grade_8),
+    class_rnoCoreGpa = mean(rnoCoreGpa),
+    class_size = n()
+  ) %>%
+  ungroup()
 
+### Q - Class Size Limitations (or still to do)
 
 ### 6. Write Output
 write_rds(analytic_dataset, file = "../Output/analytic_dataset.rds")

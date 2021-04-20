@@ -18,6 +18,7 @@ library(janitor)
 library(rlist)
 library(plm)
 library(stringr)
+library(gridExtra)
 
 ### 2. Load Analytic Dataset and Set Time Period for Analysis
 analytic_dataset <- read_rds("/home/roymckenzie/Thesis/Output/analytic_dataset.rds")
@@ -28,7 +29,18 @@ year_list <- seq(first_year, last_year, 1)
 ### 3. Estimate the Value Added - Separate by Subject and Year
 subjects <- c("Math", "English")
 controls <- c("MATH_Z", "READ_Z", "cRace", "cGender", "age", "rnoAttend", 
-              "n_infractions_grade_8", "rnoCoreGpa", "dFreshSped")
+              "n_infractions_grade_8", "rnoCoreGpa", "dFreshSped",
+              "class_MATH_Z", "class_READ_Z", "class_age", "class_rnoAttend",
+              "class_n_infractions_grade_8", "class_rnoCoreGpa", "class_size",
+              "I(MATH_Z^2)", "I(READ_Z^2)", "I(age^2)", "I(rnoAttend^2)",
+              "I(n_infractions_grade_8^2)", "I(rnoCoreGpa^2)",
+              "I(MATH_Z^3)", "I(READ_Z^3)", "I(age^3)", "I(rnoAttend^3)",
+              "I(n_infractions_grade_8^3)", "I(rnoCoreGpa^3)",
+              "I(class_MATH_Z^2)", "I(class_READ_Z^2)", "I(class_age^2)", "I(class_rnoAttend^2)",
+              "I(class_n_infractions_grade_8^2)", "I(class_rnoCoreGpa^2)",
+              "I(class_MATH_Z^3)", "I(class_READ_Z^3)", "I(class_age^3)", "I(class_rnoAttend^3)",
+              "I(class_n_infractions_grade_8^3)", "I(class_rnoCoreGpa^3)",
+              "I(class_size^2)", "I(class_size^3)")
 controls <- paste(controls, collapse = " + ")
 
 for(yr in year_list) {
@@ -92,4 +104,20 @@ for(yr in year_list) {
 }
 
 va_output <- list.rbind(lapply(paste0("va_measures_", year_list), get))
+
+g1 <- ggplot(data = va_output[va_output$subject == "Math",]) + 
+  geom_density(aes(x = va_model1, color = "Model 1")) + 
+  geom_density(aes(x = va_model2, color = "Model 2")) + 
+  geom_density(aes(x = va_model3, color = "Model 3")) + 
+  xlab("Grade Effect") + 
+  labs(title = "Math")
+g2 <- ggplot(data = va_output[va_output$subject == "English",]) + 
+  geom_density(aes(x = va_model1, color = "Model 1")) + 
+  geom_density(aes(x = va_model2, color = "Model 2")) + 
+  geom_density(aes(x = va_model3, color = "Model 3")) + 
+  xlab("Grade Effect") + 
+  labs(title = "English")
+g3 <- arrangeGrob(g1, g2, nrow = 2)
+ggsave("../Output/Grade_Effect_Density.jpeg", g3)
+
 write_rds(va_output, "../Output/va_output.rds")
