@@ -26,7 +26,6 @@ analytic_dataset <- read_rds("../Output/analytic_dataset.rds") %>%
   )
 analytic_cohort <- read_rds("../Output/analytic_cohort.rds") %>%
   filter(SID %in% analytic_dataset$SID)
-
 va_scores <- read_rds("../Output/va_output.rds")
 
 ### 3. Merge Selected VA Score with Analytic Cohort
@@ -48,19 +47,13 @@ controls <- c("MATH_Z", "READ_Z", "cRace", "cGender", "age", "rnoAttend",
               "I(class_MATH_Z^3)", "I(class_READ_Z^3)", "I(class_age^3)", "I(class_rnoAttend^3)",
               "I(class_n_infractions_grade_8^3)", "I(class_rnoCoreGpa^3)",
               "I(class_size^2)", "I(class_size^3)")
-controls <- c("MATH_Z", "READ_Z", "cRace", "cGender", "age", "rnoAttend",
-              "n_infractions_grade_8", "rnoCoreGpa", "dFreshSped",
-              "I(MATH_Z^2)", "I(READ_Z^2)", "I(age^2)", "I(rnoAttend^2)",
-              "I(n_infractions_grade_8^2)", "I(rnoCoreGpa^2)",
-              "I(MATH_Z^3)", "I(READ_Z^3)", "I(age^3)", "I(rnoAttend^3)",
-              "I(n_infractions_grade_8^3)", "I(rnoCoreGpa^3)")
 controls <- paste(controls, collapse = " + ")
 subjects <- c("Math", "English")
 
-top_math_cutoff <- quantile(analytic_dataset[analytic_dataset$subject == "Math",]$va_model2, .95)
-top_eng_cutoff <- quantile(analytic_dataset[analytic_dataset$subject == "English",]$va_model2, .95)
-low_math_cutoff <- quantile(analytic_dataset[analytic_dataset$subject == "Math",]$va_model2, .05)
-low_eng_cutoff <- quantile(analytic_dataset[analytic_dataset$subject == "English",]$va_model2, .05)
+top_math_cutoff <- quantile(analytic_dataset[analytic_dataset$subject == "Math",]$va_model2_fe, .95)
+top_eng_cutoff <- quantile(analytic_dataset[analytic_dataset$subject == "English",]$va_model2_fe, .95)
+low_math_cutoff <- quantile(analytic_dataset[analytic_dataset$subject == "Math",]$va_model2_fe, .05)
+low_eng_cutoff <- quantile(analytic_dataset[analytic_dataset$subject == "English",]$va_model2_fe, .05)
 
 results <- data.frame()
 for(outcome in outcomes) {
@@ -69,47 +62,57 @@ for(outcome in outcomes) {
   ### Indep. Var 1 - Grade Effect (in each subject)
   ### Q: Am I doing this demeaning right?
   ### Q: Clustering at the class level?
+  ### Q: Which Standard Errors/Clustering to Use
   for(current_sub in subjects) {
-    temp_data <- analytic_dataset %>% 
-      filter(
-        subject == current_sub
-      )
-    data_with_demeaned_outcome <- dresid(temp_data, outcome, controls)
-    reg1 <- lm(paste0(outcome, "_dresid ~ va_model2"), data = data_with_demeaned_outcome)
+    va_scores_sub <- va_scores[va_scores$subject == current_sub,] 
+    outcome_scores <- dresid(analytic_dataset, outcome, controls, current_sub)
+    weights <- analytic_dataset %>% group_by(TID) %>% summarize(n = n())
+    temp_data <- left_join(outcome_scores, va_scores_sub, by = "TID") %>%
+      left_join(weights, by = "TID")
+    reg1 <- lm(fixed_effects ~ va_model2_fe, data = temp_data, weights = n)
     test <- coeftest(reg1, plm::vcovHC(reg1, type = "HC3", cluster = c("funit")))
     results_this_outcome <- c(results_this_outcome, 
                               paste0(round(test[2,1], 3), " (", round(test[2,2], 3), ")",
                               " [", round(test[2, 4], 3), "]"))
   }
+  
+  ### Test This:
+  # for(current_sub in subjects) {
+  #   temp_data <- filter(analytic_dataset, subject == current_sub) 
+  #   outcome_resid <- dresid_2(temp_data, outcome, controls, current_sub)
+  #   reg2 <- lm(fixed_effects ~ va_model2_fe, data = outcome_resid)
+  #   temp_data <- innerjoin
+  # }
+  
   ### Indep. Var 2 _ Having a particularly high/low value add
   ### Generate variable indicating if a student had a teacher in the top 5% of VA for that subject
   ### TODO: Add descriptives on this variable
   ### TODO: Check, Do we pool for residualizing outcomes?
-  analytic_dataset_resid <- dresid(analytic_dataset, outcome, controls)
-  temp_data <- analytic_dataset %>%
-    select(SID, va_model2, subject) %>%
-    group_by(SID, subject) %>%
-    summarize(
-      high_va = ifelse((va_model2 >= top_math_cutoff & subject == "Math") |
-                         (va_model2 >= top_eng_cutoff & subject == "Eng"), 1, 0)
-    )
-  analytic_cohort_resid <- analytic_dataset_resid %>%
-    left_join(temp_data, by = c("SID", "subject"))
-  reg2 <- lm(paste0(outcome, "_dresid ~ high_va"), data = analytic_cohort_resid)
-  test <- coeftest(reg2, plm::vcovHC(reg2, type = "HC3", cluster = c("funit")))
-  results_this_outcome <- c(results_this_outcome, 
-                            paste0(round(test[2,1], 3), " (", round(test[2,2], 3), ")",
-                                   " [", round(test[2, 4], 3), "]"))
-  
+  # analytic_dataset_resid <- dresid(analytic_dataset, outcome, controls)
+  # temp_data <- analytic_dataset %>%
+  #   select(SID, va_model2, subject) %>%
+  #   group_by(SID, subject) %>%
+  #   summarize(
+  #     high_va = ifelse((va_model2 >= top_math_cutoff & subject == "Math") |
+  #                        (va_model2 >= top_eng_cutoff & subject == "Eng"), 1, 0)
+  #   )
+  # analytic_cohort_resid <- analytic_dataset_resid %>%
+  #   left_join(temp_data, by = c("SID", "subject"))
+  # reg2 <- lm(paste0(outcome, "_dresid ~ high_va"), data = analytic_cohort_resid)
+  # test <- coeftest(reg2, plm::vcovHC(reg2, type = "HC3", cluster = c("funit")))
+  # results_this_outcome <- c(results_this_outcome, 
+  #                           paste0(round(test[2,1], 3), " (", round(test[2,2], 3), ")",
+  #                                  " [", round(test[2, 4], 3), "]"))
+  # 
   
   results_this_outcome_df <- data.frame(t(results_this_outcome), row.names = outcome)
-  colnames(results_this_outcome_df) <- c("Math GE", "English GE", "High GE")
+  colnames(results_this_outcome_df) <- c("Math GE", "English GE") #, "High GE")
   results <- rbind(results, results_this_outcome_df)
 }
 
-kable(results, format = "latex", booktabs = T, linesep = "")
+kable(results, format = "rst", booktabs = T, linesep = "")
 
 
-kable(results, format = "latex", booktabs = T, align = c("rccc")) %>%
-  save_kable("../Output/results.tex")
+#kable(results, format = "latex", booktabs = T, align = c("rccc")) %>%
+#  save_kable("../Output/results.tex")
 

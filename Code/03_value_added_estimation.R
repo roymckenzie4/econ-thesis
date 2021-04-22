@@ -19,6 +19,7 @@ library(rlist)
 library(plm)
 library(stringr)
 library(gridExtra)
+source("utils.R")
 
 ### 2. Load Analytic Dataset and Set Time Period for Analysis
 analytic_dataset <- read_rds("/home/roymckenzie/Thesis/Output/analytic_dataset.rds")
@@ -43,55 +44,71 @@ controls <- c("MATH_Z", "READ_Z", "cRace", "cGender", "age", "rnoAttend",
               "I(class_size^2)", "I(class_size^3)")
 controls <- paste(controls, collapse = " + ")
 
+#### 3a. Standardize Grade Difference
+analytic_dataset <- analytic_dataset %>%
+  group_by(subject) %>%
+  mutate(
+    grade_difference_std = (grade_difference-mean(grade_difference))/sd(grade_difference)
+  )
+
 for(yr in year_list) {
   for(current_sub in subjects) {
     temp_analytic_data <- filter(analytic_dataset, subject == current_sub & FRESH_COHORT_YEAR == yr)
     temp_analytic_data <- mutate(temp_analytic_data, 
-                                 grade_difference_demean = grade_difference - mean(grade_difference), 
-                                 test = 1)
+                                 grade_difference_demean = grade_difference - mean(grade_difference))
     
     ### Model 1 - Simple OLS, Teacher Fixed Effects, No Controls.
-    va_model1 <- lm(grade_difference ~ factor(TID) - 1, 
-                    data = temp_analytic_data)
-    va_model1 <- va_model1$coefficients
-    va_model1 <- data.frame(TID = names(va_model1), value = va_model1, row.names = NULL) %>%
-      mutate(TID = as.numeric(str_replace(as.character(TID), fixed("factor(TID)"), "")),
-             va_model1 = (va_model1 - mean(va_model1))/sd(va_model1)) %>%
-      select(TID, va_model1 = value) 
-    
+    va_model1_lm <- lm(paste0("grade_difference ~ ", " + factor(TID) - 1"), 
+                       data = temp_analytic_data)
+    va_model1_fe <- va_model1_lm$coefficients 
+    va_model1_fe <- data.frame(TID = names(va_model1_fe), va_model1_fe = va_model1_fe, row.names = NULL) %>%
+      mutate(TID = as.numeric(str_replace(as.character(TID), fixed("factor(TID)"), ""))) %>%
+      filter(!is.na(TID)) %>%
+      mutate(va_model1_fe = va_model1_fe - mean(va_model1_fe)) %>%
+      select(TID, va_model1_fe)
+
     ### Model 2 - Simple OLS, Teacher Fixed Effects - Taken From Original
-    va_model2 <- plm(paste0("grade_difference ~ ", controls), 
+    va_model2_lm <- plm(paste0("grade_difference ~ ", controls), 
                      data = temp_analytic_data,
-                     index = c("TID"),
+                     index = c("TID", "SID"),
                      model = "within"
     )
-    va_model2_residuals <- data.frame(resid_init = va_model2$residuals)
-    va_model2 <- fixef(va_model2, type = "dmean")
-    va_model2 <- data.frame(TID = names(va_model2), va_model2 = va_model2, row.names = NULL) %>%
-      mutate(TID = as.numeric(as.character(TID)),
-             va_model2 = (va_model2 - mean(va_model2))/sd(va_model2)) %>%
-      select(TID, va_model2)
+    va_model2_fe <- fixef(va_model2_lm, type = "dmean")
+    va_model2_fe <- data.frame(TID = names(va_model2_fe), va_model2_fe = va_model2_fe, row.names = NULL) %>%
+      mutate(TID = as.numeric(as.character(TID))) %>%
+      mutate(va_model2_fe = va_model2_fe - mean(va_model2_fe)) %>%
+      select(TID, va_model2_fe)
+    va_model2_resid <- cbind(va_model2_resid = as.vector(va_model2_lm$residuals),
+                             attr(va_model2_lm$residuals, "index")) %>%
+      mutate(
+        TID = as.integer(as.character(TID)),
+        SID = as.integer(as.character(SID))
+      )
     
     ### Model 3 - Fixed effects repredicting residuals? ASK PETER
-    va_model3 <- left_join(temp_analytic_data, va_model2, by = "TID") %>%
-      cbind(va_model2_residuals)
-    va_model3 <- va_model3 %>%
+    va_model3_data <- temp_analytic_data %>%
+      left_join(
+        va_model2_resid, by = c("TID", "SID")
+      ) %>%
+      left_join(
+        va_model2_fe, by = "TID"
+      ) %>%
       mutate(
-        correct_outcome = va_model2 + resid_init
+        grade_diff_resid = va_model2_resid + va_model2_fe
       )
-    va_model3 <- lm(correct_outcome ~ factor(TID) - 1, data = va_model3)
-    va_model3 <- va_model3$coefficients
-    va_model3 <- data.frame(TID = names(va_model3), value = va_model3, row.names = NULL) %>%
-      mutate(TID = as.numeric(str_replace(as.character(TID), fixed("factor(TID)"), "")),
-             va_model3 = (va_model3 - mean(va_model3)) / sd(va_model3)) %>%
-      select(TID, va_model3 = value) 
+    va_model3_lm <- lm(grade_diff_resid ~ factor(TID) - 1, data = va_model3_data)
+    va_model3_fe <- va_model3_lm$coefficients
+    va_model3_fe <- data.frame(TID = names(va_model3_fe), va_model3_fe = va_model3_fe, row.names = NULL) %>%
+      mutate(TID = as.numeric(str_replace(as.character(TID), fixed("factor(TID)"), ""))) %>%
+      mutate(va_model3_fe = va_model3_fe - mean(va_model3_fe)) %>%
+      select(TID, va_model3_fe) 
     
     ### Model 4 - Conditional Bayes - TODO
     ### Model 5 - Conditional Bayes, accounting for drift? - TODO
     
     ### Merge Models
-    temp <- left_join(va_model1, va_model2, by = "TID") %>%
-      left_join(va_model3, by = "TID") %>%
+    temp <- full_join(va_model1_fe, va_model2_fe, by = "TID") %>%
+      full_join(va_model3_fe, by = "TID") %>%
       mutate(
         subject = current_sub, 
         FRESH_COHORT_YEAR = yr
@@ -105,18 +122,22 @@ for(yr in year_list) {
 
 va_output <- list.rbind(lapply(paste0("va_measures_", year_list), get))
 
+test <- dresid(analytic_dataset, "grade_difference", controls, c("Math", "English")) %>%
+  left_join(va_output, by = "TID")
+
 g1 <- ggplot(data = va_output[va_output$subject == "Math",]) + 
-  geom_density(aes(x = va_model1, color = "Model 1")) + 
-  geom_density(aes(x = va_model2, color = "Model 2")) + 
-  geom_density(aes(x = va_model3, color = "Model 3")) + 
+  geom_density(aes(x = va_model1_fe, color = "Model 1")) + 
+  geom_density(aes(x = va_model2_fe, color = "Model 2")) + 
+  geom_density(aes(x = va_model3_fe, color = "Model 3")) + 
   xlab("Grade Effect") + 
   labs(title = "Math")
 g2 <- ggplot(data = va_output[va_output$subject == "English",]) + 
-  geom_density(aes(x = va_model1, color = "Model 1")) + 
-  geom_density(aes(x = va_model2, color = "Model 2")) + 
-  geom_density(aes(x = va_model3, color = "Model 3")) + 
+  geom_density(aes(x = va_model1_fe, color = "Model 1")) + 
+  geom_density(aes(x = va_model2_fe, color = "Model 2")) + 
+  geom_density(aes(x = va_model3_fe, color = "Model 3")) + 
   xlab("Grade Effect") + 
   labs(title = "English")
+
 g3 <- arrangeGrob(g1, g2, nrow = 2)
 ggsave("../Output/Grade_Effect_Density.jpeg", g3)
 

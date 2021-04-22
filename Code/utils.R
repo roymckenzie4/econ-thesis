@@ -109,24 +109,64 @@ read_grades <- function(first_cohort, last_cohort) {
 #' @param controls Vector of controls (already pasted with +)
 #' @return The analytic dataset, but with the dresid style r residuals.  
 
-dresid <- function(dataset, outcome, controls) {
-  dataset <- dataset %>%
-    filter(across(.cols = outcome, .fns = ~ !is.na(.x)))
-  main_reg <- plm(paste0(outcome, " ~ ", controls),
-                  index = c("TID"),
-                  method = "between",
-                  data = dataset)
-  full_resid <- data.frame(temp_resid = main_reg$residuals)
-  fixed_effects <- fixef(main_reg, type = "dmean")
-  fixed_effects <- data.frame(TID = as.integer(as.character(names(fixed_effects))), 
-                              temp_value = fixed_effects, row.names = NULL) 
-  return_data <- dataset %>%
-    left_join(fixed_effects, by = "TID") %>%
-    cbind(full_resid) %>%
-    mutate(
-      "{outcome}_dresid" := temp_value + temp_resid
-    ) %>%
-    select(-c(temp_value, temp_resid))
-  
+dresid <- function(input_dataset, outcome, controls, subjects) {
+  return_data <- data.frame()
+  for(current_sub in subjects) {
+    dataset <- input_dataset %>%
+      filter(subject == current_sub) %>%
+      filter(across(.cols = outcome, .fns = ~ !is.na(.x)))
+    main_reg <- plm(paste0(outcome, " ~ ", controls),
+                    index = c("TID", "SID"),
+                    model = "within",
+                    data = dataset
+                )
+    residuals <- cbind(residuals = as.vector(main_reg$residuals),
+                       attr(main_reg$residuals, "index")) %>%
+      mutate(
+        TID = as.integer(as.character(TID)),
+        SID = as.integer(as.character(SID))
+      )
+    fixed_effects <- fixef(main_reg, type = "dmean")
+    fixed_effects <- data.frame(TID = as.integer(as.character(names(fixed_effects))), 
+                                fixed_effects = fixed_effects, row.names = NULL) %>%
+      mutate(fixed_effects = fixed_effects - mean(fixed_effects))
+    return_data <- rbind(return_data, fixed_effects)
+  }
+  return(return_data)
+}
+
+
+dresid_2 <- function(input_dataset, outcome, controls, subjects) {
+  return_data <- data.frame()
+  for(current_sub in subjects) {
+    dataset <- input_dataset %>%
+      filter(subject == current_sub) %>%
+      filter(across(.cols = outcome, .fns = ~ !is.na(.x)))
+    main_reg <- plm(paste0(outcome, " ~ ", controls),
+                    index = c("TID", "SID"),
+                    model = "within",
+                    data = dataset
+    )
+    residuals <- cbind(residuals = as.vector(main_reg$residuals),
+                       attr(main_reg$residuals, "index")) %>%
+      mutate(
+        TID = as.integer(as.character(TID)),
+        SID = as.integer(as.character(SID))
+      )
+    fixed_effects <- fixef(main_reg, type = "dmean")
+    fixed_effects <- data.frame(TID = as.integer(as.character(names(fixed_effects))), 
+                                fixed_effects = fixed_effects, row.names = NULL) %>%
+      mutate(fixed_effects = fixed_effects - mean(fixed_effects))
+    
+    dataset <- dataset %>%
+      left_join(fixed_effects, by = "TID") %>%
+      left_join(
+        residuals, by = c("SID", "TID")
+      ) %>%
+      mutate(
+        dresiduals = residuals + fixed_effects
+      )
+    return_data <- rbind(return_data, dataset)
+  }
   return(return_data)
 }

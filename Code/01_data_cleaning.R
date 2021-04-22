@@ -139,6 +139,7 @@ fall_grades <- grades %>%
     FRESH_COHORT_YEAR,
     SOPH_FALL_GPA = GPA,
     SOPH_FALL_FMK = FMK, 
+    SOPH_FALL_LEVEL = LEVEL,
     subject
   ) %>%
   filter(FRESH_COHORT_YEAR >= first_year & FRESH_COHORT_YEAR <= last_year)
@@ -154,6 +155,7 @@ spring_grades <- grades %>%
   select(
     SID, FRESH_COHORT_YEAR, GRADE_SCHLID, 
     LEVEL, CN3, SECTION, TID, subject, FRESH_SPRING_GPA = GPA,
+    FRESH_SPRING_LEVEL = LEVEL,
     FRESH_SPRING_FMK = FMK
   ) %>%
   filter(FRESH_COHORT_YEAR >= first_year & FRESH_COHORT_YEAR <= last_year)
