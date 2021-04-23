@@ -78,6 +78,7 @@ temp_table <- tbl_summary(temp, sort = list(everything() ~ "frequency"),
 
 huxtable::number_format(temp_table)[1, ] <- "%.0f"
 huxtable::label(temp_table) <- "tab:table_demographics"
+huxtable::latex_float(temp_table) <- "h!"
 huxtable::print_latex(temp_table) 
 sink()
 
@@ -102,6 +103,7 @@ modify_caption("8th Grade Outcomes by Cohorts") %>%
 
 huxtable::number_format(temp_table)[1, ] <- "%.0f"
 huxtable::label(temp_table) <- "tab:table_eigth_grade"
+huxtable::latex_float(temp_table) <- "h!"
 huxtable::print_latex(temp_table) 
 
 sink()
