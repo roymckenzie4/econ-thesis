@@ -1,0 +1,64 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[left=1in, right=1in, top=1in, bottom=1in]{geometry}
+\usepackage{titling}
+\usepackage{amsmath}
+\usepackage{fancyhdr}
+\usepackage{setspace}
+\usepackage{framed} 
+\pagestyle{fancy}
+\usepackage{amsmath, amsthm, amssymb, amsfonts, mathtools, xfrac, mathrsfs, tikz}
+\usepackage{enumerate}
+\usepackage{graphicx,dsfont, float}
+\usepackage{braket, bm}
+\usepackage{bbold}
+\usepackage{setspace}
+\usepackage{booktabs}
+
+\usepackage{titlesec}
+
+
+\usepackage{array}
+\usepackage{caption}
+\usepackage{siunitx}
+\usepackage[normalem]{ulem}
+\usepackage{colortbl}
+\usepackage{multirow}
+\usepackage{hhline}
+\usepackage{calc}
+\usepackage{tabularx}
+\usepackage{threeparttable}
+\usepackage{wrapfig}
+\usepackage{adjustbox}
+\usepackage{hyperref}
+
+\usepackage{subfiles}
+
+
+
+\begin{document}	
+	\include{table_freq}
+	\include{table_demographics}
+	\include{table_eigth_grade}
+	\include{table_grade_desc}
+
+	\begin{figure}[h]
+		\caption{Relationship between Fresh and Soph Math Grades}
+		\centering
+		\includegraphics{grade_comp_math.png}
+	\end{figure}
+
+	\begin{figure}[h]
+		\caption{Relationship between Fresh and Soph English Grades}
+		\centering
+		\includegraphics{grade_comp_eng.png}
+	\end{figure}
+
+	\begin{figure}[h]
+		\caption{Distribution of Teacher Grading Effects}
+		\centering
+		\includegraphics{Grade_Effect_Density.jpeg}
+	\end{figure}
+
+	\include{results}
+\end{document}

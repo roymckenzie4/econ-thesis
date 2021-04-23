@@ -1,0 +1,59 @@
+---
+title: "Thesis Check-In"
+author: "Roy McKenzie"
+date: "4/21/2021"
+output: 
+  beamer_presentation
+header-includes:
+  - \usepackage[utf8]{inputenc}
+  - \usepackage{amsmath}
+  - \usepackage{fancyhdr}
+  - \usepackage{geometry}
+  - \usepackage{setspace}
+  - \usepackage{framed} 
+  - \usepackage{amsmath, amsthm, amssymb, amsfonts, mathtools, xfrac, mathrsfs, tikz}
+  - \usepackage{enumerate}
+  - \usepackage{graphicx,dsfont, float}
+  - \usepackage{braket, bm}
+  - \usepackage{bbold}
+  - \usepackage{setspace}
+  - \usepackage{booktabs}
+  - \usepackage{array}
+  - \usepackage{caption}
+  - \usepackage{siunitx}
+  - \usepackage[normalem]{ulem}
+  - \usepackage{colortbl}
+  - \usepackage{multirow}
+  - \usepackage{hhline}
+  - \usepackage{calc}
+  - \usepackage{tabularx}
+  - \usepackage{threeparttable}
+  - \usepackage{wrapfig}
+  - \usepackage{adjustbox}
+  - \usepackage{hyperref}
+  - \makeatletter\let\zz\reset@color\def\reset@color{\kern\z@\zz}\makeatother
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## Eigth Grade Variable Descriptives
+
+```{=latex}
+\tiny
+\input{../Output/table_eigth_grade.tex}
+```
+
+
+## Frequencies of Grade Variables by Freshman Cohort
+
+```{=latex}
+\input{../Output/table_freq.tex}
+```
+
+
+
+
+

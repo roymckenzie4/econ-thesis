@@ -1,0 +1,20 @@
+---
+title: "Thesis Check In"
+author: "Roy McKenzie"
+date: "4/20/2021"
+output: beamer_presentation
+  
+---
+
+```{r setup, include=FALSE}
+library(kableExtra)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Grade Descriptives 
+
+Test
+
+```{=latex}
+\input{../Output/table_demographics.tex}
+```
