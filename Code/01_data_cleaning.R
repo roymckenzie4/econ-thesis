@@ -77,6 +77,7 @@ grades <- raw_grades %>%
   # Numerically encode GPAs. Note, adjust the numeric GPA by Honor Level. 
   mutate(
     FMK = ordered(FMK, levels = c("F", "D", "C", "B", "A"), exclude = c("/", "P")),
+    
     GPA = factor(FMK, levels = c("/", "P", "A", "B", "C", "D", "F"), labels = c(NA, NA, 4, 3, 2, 1, 0)),
     GPA = as.numeric(as.character(GPA))
     ### USE UNWEIGHTED FOR NOW

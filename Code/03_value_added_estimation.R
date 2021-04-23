@@ -49,6 +49,11 @@ analytic_dataset <- analytic_dataset %>%
   group_by(subject) %>%
   mutate(
     grade_difference_std = (grade_difference-mean(grade_difference))/sd(grade_difference)
+  ) %>%
+  mutate(
+    diff_grade_level = ifelse(FRESH_SPRING_LEVEL == "R" & (SOPH_FALL_LEVEL == "H" | SOPH_FALL_LEVEL == "A"),
+                              1, ifelse((FRESH_SPRING_LEVEL == "A" | FRESH_SPRING_LEVEL == "H") & SOPH_FALL_LEVEL == "H",
+                                        -1, 0))
   )
 
 for(yr in year_list) {
@@ -85,6 +90,18 @@ for(yr in year_list) {
         SID = as.integer(as.character(SID))
       )
     
+    test_lm <- plm(paste0("grade_difference ~ diff_grade_level + ", controls), 
+                        data = temp_analytic_data,
+                        index = c("TID", "SID"),
+                        model = "within"
+    )
+    test_fe <- fixef(test_lm, type = "dmean")
+    test_fe <- data.frame(TID = names(test_fe), test_fe = test_fe, row.names = NULL) %>%
+      mutate(TID = as.numeric(as.character(TID))) %>%
+      mutate(test_fe = test_fe - mean(test_fe)) %>%
+      select(TID, test_fe)
+    
+    
     ### Model 3 - Fixed effects repredicting residuals? ASK PETER
     va_model3_data <- temp_analytic_data %>%
       left_join(
@@ -109,6 +126,7 @@ for(yr in year_list) {
     ### Merge Models
     temp <- full_join(va_model1_fe, va_model2_fe, by = "TID") %>%
       full_join(va_model3_fe, by = "TID") %>%
+      full_join(test_fe, by = "TID") %>%
       mutate(
         subject = current_sub, 
         FRESH_COHORT_YEAR = yr
@@ -122,19 +140,21 @@ for(yr in year_list) {
 
 va_output <- list.rbind(lapply(paste0("va_measures_", year_list), get))
 
-test <- dresid(analytic_dataset, "grade_difference", controls, c("Math", "English")) %>%
-  left_join(va_output, by = "TID")
+test <- analytic_dataset %>%
+  left_join(va_output, by = c("TID", "subject"))
 
 g1 <- ggplot(data = va_output[va_output$subject == "Math",]) + 
   geom_density(aes(x = va_model2_fe), color = "red") + 
+  geom_density(aes(x = test_fe), color = "blue") + 
   xlab("Grade Effect") + 
   labs(title = "Math")
 g2 <- ggplot(data = va_output[va_output$subject == "English",]) + 
   geom_density(aes(x = va_model2_fe), color = "red") + 
+  geom_density(aes(x = test_fe), color = "blue") + 
   xlab("Grade Effect") + 
   labs(title = "English")
 
-g3 <- arrangeGrob(g1, g2, nrow = 2)
-ggsave("../Output/Grade_Effect_Density.jpeg", g3)
+#g3 <- arrangeGrob(g1, g2, nrow = 2)
+#ggsave("../Output/Grade_Effect_Density.jpeg", g3)
 
 write_rds(va_output, "../Output/va_output.rds")

@@ -16,6 +16,7 @@ library(haven)
 library(dplyr)
 library(lmtest)
 library(janitor)
+library(kableExtra)
 library(stringr)
 source("utils.R")
 
@@ -29,11 +30,25 @@ analytic_cohort <- read_rds("../Output/analytic_cohort.rds") %>%
 va_scores <- read_rds("../Output/va_output.rds")
 
 ### 3. Merge Selected VA Score with Analytic Cohort
-analytic_dataset <- left_join(analytic_dataset, va_scores, by = c("TID", "subject", "FRESH_COHORT_YEAR"))
+gclasses_outcomes <- read.csv("/home/projects/To_and_Through/Projects/MakeGraduatingClasses/Output/outcomes_210105.csv")
+gclasses_outcomes_clean <- gclasses_outcomes %>%
+  select(
+    SID, dImm2yr, dImm4yr, dEarn2in3, dEarn4in4
+  )
+
+analytic_dataset <- left_join(analytic_dataset, va_scores, by = c("TID", "subject", "FRESH_COHORT_YEAR")) %>%
+  left_join(gclasses_outcomes_clean, by = "SID") %>%
+  mutate(
+    diff_grade_level = ifelse(FRESH_SPRING_LEVEL == "R" & (SOPH_FALL_LEVEL == "H" | SOPH_FALL_LEVEL == "A"),
+                              1, ifelse((FRESH_SPRING_LEVEL == "A" | FRESH_SPRING_LEVEL == "H") & SOPH_FALL_LEVEL == "H",
+                                        -1, 0))
+  )
 
 ### 4. Run Analysis
-outcomes <- c("nAPCourses4yr", "dEarnRegDip4yr", "dFreshOnTrack", "highACT_EQUIV",
-              "gradCumCoreGPA", "nHonorsCourses4yr")
+outcomes <- c("dFreshOnTrack", "freshCoreGPA", "diff_grade_level", "pFreshAttendance",
+              "nAPCourses4yr", "nHonorsCourses4yr",
+              "highACT_EQUIV", "gradCumCoreGPA", "dEarnRegDip4yr",
+              "dImm2yr", "dImm4yr", "dEarn2in3", "dEarn4in4")
 controls <- c("MATH_Z", "READ_Z", "cRace", "cGender", "age", "rnoAttend", 
               "n_infractions_grade_8", "rnoCoreGpa", "dFreshSped",
               "class_MATH_Z", "class_READ_Z", "class_age", "class_rnoAttend",
@@ -88,31 +103,39 @@ for(outcome in outcomes) {
   ### Generate variable indicating if a student had a teacher in the top 5% of VA for that subject
   ### TODO: Add descriptives on this variable
   ### TODO: Check, Do we pool for residualizing outcomes?
-  # analytic_dataset_resid <- dresid(analytic_dataset, outcome, controls)
-  # temp_data <- analytic_dataset %>%
-  #   select(SID, va_model2, subject) %>%
-  #   group_by(SID, subject) %>%
-  #   summarize(
-  #     high_va = ifelse((va_model2 >= top_math_cutoff & subject == "Math") |
-  #                        (va_model2 >= top_eng_cutoff & subject == "Eng"), 1, 0)
-  #   )
-  # analytic_cohort_resid <- analytic_dataset_resid %>%
-  #   left_join(temp_data, by = c("SID", "subject"))
-  # reg2 <- lm(paste0(outcome, "_dresid ~ high_va"), data = analytic_cohort_resid)
-  # test <- coeftest(reg2, plm::vcovHC(reg2, type = "HC3", cluster = c("funit")))
-  # results_this_outcome <- c(results_this_outcome, 
-  #                           paste0(round(test[2,1], 3), " (", round(test[2,2], 3), ")",
-  #                                  " [", round(test[2, 4], 3), "]"))
-  # 
+  for(current_sub in subjects) {
+    va_scores_sub <- va_scores[va_scores$subject == current_sub,] 
+    outcome_scores <- dresid(analytic_dataset, outcome, controls, current_sub)
+    weights <- analytic_dataset %>% group_by(TID) %>% summarize(n = n())
+    temp_data <- left_join(outcome_scores, va_scores_sub, by = "TID") %>%
+      left_join(weights, by = "TID") %>%
+      mutate(
+        high_va = ifelse(current_sub == "Math", va_model2_fe >= top_math_cutoff, 
+                         ifelse(current_sub == "English", va_model2_fe >= top_eng_cutoff, 0))
+      )
+    reg2 <- lm(fixed_effects ~ high_va, data = temp_data, weights = n)
+    test <- coeftest(reg1, plm::vcovHC(reg1, type = "HC3", cluster = c("funit")))
+    results_this_outcome <- c(results_this_outcome, 
+                              paste0(round(test[2,1], 3), " (", round(test[2,2], 3), ")",
+                                     " [", round(test[2, 4], 3), "]"))
+  }
   
   results_this_outcome_df <- data.frame(t(results_this_outcome), row.names = outcome)
-  colnames(results_this_outcome_df) <- c("Math GE", "English GE") #, "High GE")
+  colnames(results_this_outcome_df) <- c("Math GE", "English GE", "High GE Math", "High GE English")
   results <- rbind(results, results_this_outcome_df)
 }
+
+row.names(results) <- c("Freshman on Track", "Freshman Core GPA", "Difference in Class Level Freshman to Sophmore Year",
+                        "Freshman Year Attendance (Fraction)",
+                        "N. AP Courses Over 4 Years", "N. Honors Courses Over 4 Years",
+                        "ACT Score", "Graduating Core GPA", "Earned a Diploma Within 4 Years",
+                        "Enrolled Immediately in a 2 Year College", "Enrolled Immediately in a 4 Year College", 
+                        "Earned a 2 Year Degree w/in 3 Years", "Earned a 4 Year Degree w/in 6 Years")
 
 kable(results, format = "rst", booktabs = T, linesep = "")
 
 
-#kable(results, format = "latex", booktabs = T, align = c("rccc")) %>%
-#  save_kable("../Output/results.tex")
+kable(results, caption = "Impact of Teacher Grade Effect on a Variety of Outcomes\\label{tbl:results}", 
+      format = "latex", booktabs = T, align = c("rccc")) %>%
+  save_kable("../Output/results.tex")
 
