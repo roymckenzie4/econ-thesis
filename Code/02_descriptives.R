@@ -125,7 +125,7 @@ temp <- analytic_dataset %>%
   ) %>% t() %>%
   row_to_names(row_number = 2)
   
-kable(temp, format = "latex", caption = "Grade Variables by Freshman Cohort, Subject", 
+kable(temp, format = "latex", caption = "Grade Variables by Freshman Cohort, Subject\\label{tab:table_freq}", 
       label = "table_freq", booktabs = T, linesep = c("", "", "\\addlinespace", "", "", "", ""),
       escape = F, align = c("cc"), midrule = "\\midrule") %>%
   add_header_above(c(" " = 1, "2013" = 2)) %>% 
