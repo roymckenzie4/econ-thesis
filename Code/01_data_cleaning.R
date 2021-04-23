@@ -78,9 +78,10 @@ grades <- raw_grades %>%
   mutate(
     FMK = ordered(FMK, levels = c("F", "D", "C", "B", "A"), exclude = c("/", "P")),
     GPA = factor(FMK, levels = c("/", "P", "A", "B", "C", "D", "F"), labels = c(NA, NA, 4, 3, 2, 1, 0)),
-    GPA = as.numeric(as.character(GPA)),
-    GPA = ifelse(LEVEL == "A" & (GPA > 1), GPA + 2, GPA),
-    GPA = ifelse(LEVEL == "H" & (GPA > 1), GPA + 1, GPA)
+    GPA = as.numeric(as.character(GPA))
+    ### USE UNWEIGHTED FOR NOW
+    #GPA = ifelse(LEVEL == "A" & (GPA > 1), GPA + 2, GPA),
+    #GPA = ifelse(LEVEL == "H" & (GPA > 1), GPA + 1, GPA)
   ) %>%
   # Limit to unique observations
   distinct(.keep_all = TRUE)
@@ -293,7 +294,8 @@ student_vals <- student_vals %>%
          !is.na(MATH_Z) &
          !is.na(READ_Z) &
          !is.na(rnoCoreGpa) &
-         !is.na(cSped))
+         !is.na(cSped) & 
+         !is.na(PBPOV))
 
 
 ### 4c. Linking Individual Data to Grades Data
@@ -322,7 +324,7 @@ analytic_dataset <- analytic_dataset %>%
   ) %>%
   ungroup()
 
-### Q - Class Size Limitations (or still to do)
+### Q? - Class Size Limitations (or still to do)
 
 ### 6. Write Output
 write_rds(analytic_dataset, file = "../Output/analytic_dataset.rds")

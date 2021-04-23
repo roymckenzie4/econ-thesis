@@ -66,7 +66,7 @@ temp <- analytic_cohort %>%
     age = as.numeric(as.character(age))
   )
 sink("../Output/table_demographics.tex", type = c("output"))
-tbl_summary(temp, sort = list(everything() ~ "frequency"),
+temp_table <- tbl_summary(temp, sort = list(everything() ~ "frequency"),
             statistic = list(all_continuous() ~ "{mean} ({sd})"),
             digits = list(all_continuous() ~ 2),type = c("age" ~ "continuous"),
             label = c("age" ~ "Age at Start of Freshmen Year",
@@ -74,42 +74,60 @@ tbl_summary(temp, sort = list(everything() ~ "frequency"),
             missing_text = "Missing",
             by = freshCohort) %>% 
   modify_caption("Demographics by Freshman Cohort") %>%
-  as_hux_table() %>% huxtable::print_latex() 
+  as_hux_table()
+
+huxtable::number_format(temp_table)[1, ] <- "%.0f"
+huxtable::label(temp_table) <- "tab:table_demographics"
+huxtable::print_latex(temp_table) 
 sink()
 
 ### 4b. Prior Performance Descriptives
 sink("../Output/table_eigth_grade.tex")
-tbl_summary(
-  analytic_cohort, include = c("MATH_Z", "READ_Z", "rnoAttend", "n_infractions_grade_8", "freshCohort"),
+temp_table <- tbl_summary(
+  analytic_cohort, 
+  include = c("MATH_Z", "READ_Z","rnoCoreGpa", "rnoAttend", "n_infractions_grade_8", "freshCohort"),
   statistic = list(all_continuous() ~ "{mean} ({sd})"),
-  digits = list(all_continuous() ~ 2), 
+  digits = list(all_continuous() ~ 4), 
   label = c("MATH_Z" ~ "8th Grade Math Score (Standardized)", "READ_Z" ~ "8th Grade Reading Score (Standardized)",
             "rnoAttend" ~ "8th Grade Attendance (Fraction of Days Attended)",
+            "rnoCoreGpa" ~ "8th Grade Core GPA",
             "n_infractions_grade_8" ~ "8th Grade Discipline (no. of infractions)",
             "freshCohort" ~ "Fall of Freshman Year"), 
   by = freshCohort, 
-  missing_text = "Missing") %>% 
-  modify_caption("8th Grade Outcomes by Cohorts") %>%
-  as_hux_table() %>% huxtable::print_latex()
+  missing_text = "Missing"
+) %>% 
+modify_caption("8th Grade Outcomes by Cohorts") %>%
+  modify_header(label = "**Outcome**") %>%
+  as_hux_table() 
+
+huxtable::number_format(temp_table)[1, ] <- "%.0f"
+huxtable::label(temp_table) <- "tab:table_eigth_grade"
+huxtable::print_latex(temp_table) 
+
 sink()
 
 ### 4c. Class Data
 temp <- analytic_dataset %>%
-  group_by(FRESH_COHORT_YEAR) %>%
+  filter(subject == "Math" | subject == "English") %>%
+  group_by(FRESH_COHORT_YEAR, subject) %>%
   summarize(
     `Number of Students` = length(unique(SID)),
     `Number of Teachers` = length(unique(TID)),
     `Number of Schools` = length(unique(funit)),
-    `Math Grades` = sum(subject == "Math"),
-    `Reading Grades` = sum(subject == "English"),
-    `Social Studies Grades` = sum(subject == "Social Studies"), 
-    `Science Grades` = sum(subject == "Science")
+    `Mean Freshman Grade` = paste0(format(mean(FRESH_SPRING_GPA), digits = 2, nsmall = 2), 
+                                   " (", format(sd(FRESH_SPRING_GPA), digits = 2, nsmall = 2), ")"),
+    `Mean Sophmore Grade` = paste0(format(mean(SOPH_FALL_GPA), digits = 2, nsmall = 2), 
+                                   " (", format(sd(SOPH_FALL_GPA), digits = 2, nsmall = 2), ")"),
+    `Mean Difference` = paste0(format(round(mean(FRESH_SPRING_GPA), 2) - round(mean(SOPH_FALL_GPA), 2), digits = 2, nsmall =  2),
+                               " (", format(sd(FRESH_SPRING_GPA-SOPH_FALL_GPA), digits = 2, nsmall = 2), ")")
   ) %>% t() %>%
-  row_to_names(row_number = 1)
+  row_to_names(row_number = 2)
   
-kable(temp, format = "latex", caption = "Frequencies of Grade Variables by Freshman Cohort", 
-      label = "table_freq", booktabs = T, linesep = c("", "", "\\addlinespace", "", "", "", "")
-) %>% save_kable("../Output/table_freq.tex")
+kable(temp, format = "latex", caption = "Grade Variables by Freshman Cohort, Subject", 
+      label = "table_freq", booktabs = T, linesep = c("", "", "\\addlinespace", "", "", "", ""),
+      escape = F, align = c("cc"), midrule = "\\midrule") %>%
+  add_header_above(c(" " = 1, "2013" = 2)) %>% 
+  save_kable("../Output/table_freq.tex")
 
 ### 4d. Descriptives on Grades
 ### Table 1 - Average Grade in Each Class Over Time 

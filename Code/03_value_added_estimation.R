@@ -30,7 +30,7 @@ year_list <- seq(first_year, last_year, 1)
 ### 3. Estimate the Value Added - Separate by Subject and Year
 subjects <- c("Math", "English")
 controls <- c("MATH_Z", "READ_Z", "cRace", "cGender", "age", "rnoAttend", 
-              "n_infractions_grade_8", "rnoCoreGpa", "dFreshSped",
+              "n_infractions_grade_8", "rnoCoreGpa", "dFreshSped", "PBPOV",
               "class_MATH_Z", "class_READ_Z", "class_age", "class_rnoAttend",
               "class_n_infractions_grade_8", "class_rnoCoreGpa", "class_size",
               "I(MATH_Z^2)", "I(READ_Z^2)", "I(age^2)", "I(rnoAttend^2)",
