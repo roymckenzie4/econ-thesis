@@ -65,8 +65,8 @@ controls <- c("MATH_Z", "READ_Z", "cRace", "cGender", "age", "rnoAttend",
 controls <- paste(controls, collapse = " + ")
 subjects <- c("Math", "English")
 
-top_math_cutoff <- quantile(analytic_dataset[analytic_dataset$subject == "Math",]$va_model2_fe, .95)
-top_eng_cutoff <- quantile(analytic_dataset[analytic_dataset$subject == "English",]$va_model2_fe, .95)
+top_math_cutoff <- quantile(analytic_dataset[analytic_dataset$subject == "Math",]$va_model2_fe, .90)
+top_eng_cutoff <- quantile(analytic_dataset[analytic_dataset$subject == "English",]$va_model2_fe, .90)
 low_math_cutoff <- quantile(analytic_dataset[analytic_dataset$subject == "Math",]$va_model2_fe, .05)
 low_eng_cutoff <- quantile(analytic_dataset[analytic_dataset$subject == "English",]$va_model2_fe, .05)
 
@@ -110,11 +110,11 @@ for(outcome in outcomes) {
     temp_data <- left_join(outcome_scores, va_scores_sub, by = "TID") %>%
       left_join(weights, by = "TID") %>%
       mutate(
-        high_va = ifelse(current_sub == "Math", va_model2_fe >= top_math_cutoff, 
-                         ifelse(current_sub == "English", va_model2_fe >= top_eng_cutoff, 0))
+        high_va = ifelse(current_sub == "Math" & (va_model2_fe >= top_math_cutoff), 1,
+                         ifelse(current_sub == "English" & (va_model2_fe >= top_eng_cutoff), 1, 0))
       )
     reg2 <- lm(fixed_effects ~ high_va, data = temp_data, weights = n)
-    test <- coeftest(reg1, plm::vcovHC(reg1, type = "HC3", cluster = c("funit")))
+    test <- coeftest(reg2, plm::vcovHC(reg2, type = "HC3", cluster = c("funit")))
     results_this_outcome <- c(results_this_outcome, 
                               paste0(round(test[2,1], 3), " (", round(test[2,2], 3), ")",
                                      " [", round(test[2, 4], 3), "]"))
@@ -136,6 +136,8 @@ kable(results, format = "rst", booktabs = T, linesep = "")
 
 
 kable(results, caption = "Impact of Teacher Grade Effect on a Variety of Outcomes\\label{tbl:results}", 
-      format = "latex", booktabs = T, align = c("rccc")) %>%
+      format = "latex", booktabs = T, align = c("ccc"), midrule = "\\midrule", 
+      linesep = c("", "", "", "", "\\addlinespace", "", "", "", "", "\\addlinespace",
+                  "", "", "", "")) %>%
   save_kable("../Output/results.tex")
 
