@@ -126,15 +126,11 @@ test <- dresid(analytic_dataset, "grade_difference", controls, c("Math", "Englis
   left_join(va_output, by = "TID")
 
 g1 <- ggplot(data = va_output[va_output$subject == "Math",]) + 
-  geom_density(aes(x = va_model1_fe, color = "Model 1")) + 
-  geom_density(aes(x = va_model2_fe, color = "Model 2")) + 
-  geom_density(aes(x = va_model3_fe, color = "Model 3")) + 
+  geom_density(aes(x = va_model2_fe), color = "red") + 
   xlab("Grade Effect") + 
   labs(title = "Math")
 g2 <- ggplot(data = va_output[va_output$subject == "English",]) + 
-  geom_density(aes(x = va_model1_fe, color = "Model 1")) + 
-  geom_density(aes(x = va_model2_fe, color = "Model 2")) + 
-  geom_density(aes(x = va_model3_fe, color = "Model 3")) + 
+  geom_density(aes(x = va_model2_fe), color = "red") + 
   xlab("Grade Effect") + 
   labs(title = "English")
 
