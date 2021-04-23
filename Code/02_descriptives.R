@@ -65,6 +65,7 @@ temp <- analytic_cohort %>%
     PBPOV = 100*PBPOV,
     age = as.numeric(as.character(age))
   )
+
 sink("../Output/table_demographics.tex", type = c("output"))
 temp_table <- tbl_summary(temp, sort = list(everything() ~ "frequency"),
             statistic = list(all_continuous() ~ "{mean} ({sd})"),
