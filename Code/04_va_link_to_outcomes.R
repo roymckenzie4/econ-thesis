@@ -137,7 +137,7 @@ kable(results, format = "rst", booktabs = T, linesep = "")
 
 kable(results, caption = "Impact of Teacher Grade Effect on a Variety of Outcomes\\label{tbl:results}", 
       format = "latex", booktabs = T, align = c("ccc"), midrule = "\\midrule", 
-      linesep = c("", "", "", "", "\\addlinespace", "", "", "", "", "\\addlinespace",
+      linesep = c("", "", "", "", "", "\\addlinespace", "", "", "", "", "\\addlinespace",
                   "", "", "", "")) %>%
   save_kable("../Output/results.tex")
 
