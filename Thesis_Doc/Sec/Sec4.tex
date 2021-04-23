@@ -52,7 +52,7 @@ Importantly, we also wish to limit our dataset to one observation per student/su
 %% THIS WILL NEED TO BE CHANGED WHEN WE ADD MORE YEARS, ALSO CHECK LATER AFTER RERUNNING TABLES.
 %% TODO: Add Apendix A table. 
 
-Table 1 displays summary statistics for the analytic sample of the demographic variables described above, by freshman cohort. As this table shows, our analytic 2013-14 freshman cohort contains 11,125 observations. Over 80\% of these observations are students of color, which is relatively representative of CPS as a whole. Appendix A also contains a table comparing the full cohort to this analytic sample after all decision rules are put in place. 
+Table~\ref{tab:table_demographics} displays summary statistics for the analytic sample of the demographic variables described above, by freshman cohort. As this table shows, our analytic 2013-14 freshman cohort contains 11,125 observations. Over 80\% of these observations are students of color, which is relatively representative of CPS as a whole. Appendix A also contains a table comparing the full cohort to this analytic sample after all decision rules are put in place. 
 
 % TODO: Add real ref label to table, as well as fixing year. Also, should drop missing, soooo... do that. THIS TABLE NEEDS R WORK.
 \input{/Users/roymckenzie/Dropbox/Thesis/ECON/Output/table_demographics.tex}
@@ -60,7 +60,7 @@ Table 1 displays summary statistics for the analytic sample of the demographic v
 % TODO: add real ref label to table. THIS TABLE NEEDS R WORK. ALSO FIX YEAR. WHY ARE MATH AND READING Z SCORES NOT STANDARDIZED. 
 %% TODO: Add 8th grade GPA?
 
-Similarly, Table 2 displays summary statistics for the eigth grade prior achievement variables for our analytic sample. The first two row contain information on the standardized eigth grade math and reading scores for students in our sample. These scores are standardized at the full cohort level to have mean zero and variance one. The fact that the mean scores within our cohort are slightly higher than zero in each case therefore represents a slight positive selection effect of our sample. This same positive bias is widely observed across the literature, and is highlighted in \cite{gilraineMakingTeachingLast2020}. In our case, it likely results from dropping students with missing grade data, who may be in alternative schools or programs and, on the whole, slightly underperforming. A similar bias is observed within the eigth grade attendance, grade, and discipline variables.
+Similarly, Table~\ref{tab:table_eigth_grade} displays summary statistics for the eigth grade prior achievement variables for our analytic sample. The first two row contain information on the standardized eigth grade math and reading scores for students in our sample. These scores are standardized at the full cohort level to have mean zero and variance one. The fact that the mean scores within our cohort are slightly higher than zero in each case therefore represents a slight positive selection effect of our sample. This same positive bias is widely observed across the literature, and is highlighted in \cite{gilraineMakingTeachingLast2020}. In our case, it likely results from dropping students with missing grade data, who may be in alternative schools or programs and, on the whole, slightly underperforming. A similar bias is observed within the eigth grade attendance, grade, and discipline variables.
 
 \input{/Users/roymckenzie/Dropbox/Thesis/ECON/Output/table_eigth_grade.tex}
 
@@ -72,7 +72,7 @@ As this table shows, the average numerical difference between freshman and sophm
 
 %% TODO: Add interpretation This not only explains the near zero mean given in the previous table, but also gives some logical credence to our model, in that it seems to indicate that, on average, a students grade in a given year is relatively co
 
-\begin{figure}
+\begin{figure}[H]
 	\centering
 	\begin{subfigure}[b]{0.49\textwidth}
 		\centering
