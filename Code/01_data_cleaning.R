@@ -20,8 +20,8 @@ library(eeptools)
 source("utils.R")
 
 ### 2. Set Time Period for Analysis
-first_year <- 2013
-last_year <- 2013
+first_year <- 2010
+last_year <- 2014
 year_list <- seq(first_year, last_year, 1)
 
 ### 3. Import Data
@@ -142,6 +142,7 @@ fall_grades <- grades %>%
     SOPH_FALL_GPA = GPA,
     SOPH_FALL_FMK = FMK, 
     SOPH_FALL_LEVEL = LEVEL,
+    SOPH_TID = TID,
     subject
   ) %>%
   filter(FRESH_COHORT_YEAR >= first_year & FRESH_COHORT_YEAR <= last_year)
@@ -178,6 +179,7 @@ for(yr in year_list) {
   yr_string_discipline <- paste0(substr(yr-1, 3, 4), substr(yr, 3, 4))
   discipline_temp <- read_sas(paste0("/mnt/data/discipline/misconduct", yr_string_discipline, ".sas7bdat"))
   discipline_temp <- discipline_temp %>%
+    clean_names(case = "small_camel") %>%
     group_by(sid) %>%
     summarize(
       n_infractions_grade_8 = n()
@@ -305,6 +307,28 @@ student_vals <- student_vals %>%
 ###     who satisfy all grade decision rules. 
 analytic_dataset <- differenced_grades %>%
   inner_join(student_vals, by = c("SID", "FRESH_COHORT_YEAR" = "freshCohort"))
+
+
+### 4d. Drop teachers who taught at more than one school in a given year
+analytic_dataset <- analytic_dataset %>%
+  group_by(TID, FRESH_COHORT_YEAR) %>% 
+  filter(length(unique(GRADE_SCHLID)) == 1)
+
+### 4e. Sped Controls (Following Chetty)
+analytic_dataset <- analytic_dataset %>% 
+  group_by(TID, FRESH_COHORT_YEAR, GRADE_SCHLID) %>%
+  filter(sum(dFreshSped) / n() < .25)
+  
+### 4f. Controls for how many students a teacher sees TOTAL. 
+### Here we don't exactly follow Chetty because many students in CPS 
+### are in 1-7 person classes. I believe this could be an administrative 
+### side effect of the same class being listed in multiple sections. 
+### TODO: Think about this further.
+analytic_dataset <- analytic_dataset %>%
+  group_by(TID, FRESH_COHORT_YEAR) %>%
+  filter(n() >= 7) %>%
+  ungroup()
+
 analytic_cohort <- student_vals %>%
   filter(SID %in% analytic_dataset$SID)
 raw_cohort <- student_vals_raw 
@@ -313,7 +337,7 @@ raw_cohort <- student_vals_raw
 
 ### 5a. Class Level Controls
 analytic_dataset <- analytic_dataset %>%
-  group_by(GRADE_SCHLID, TID, SECTION) %>%
+  group_by(GRADE_SCHLID, TID, SECTION, FRESH_COHORT_YEAR) %>%
   mutate(
     class_MATH_Z = mean(MATH_Z),
     class_READ_Z = mean(READ_Z),
@@ -321,9 +345,28 @@ analytic_dataset <- analytic_dataset %>%
     class_rnoAttend = mean(rnoAttend),
     class_n_infractions_grade_8 = mean(n_infractions_grade_8),
     class_rnoCoreGpa = mean(rnoCoreGpa),
-    class_size = n()
+    class_size = n(),
+    class_pbpov = mean(PBPOV)
   ) %>%
   ungroup()
+
+
+### 5b. School Level Controls
+### Get grade vs funit figured out?
+analytic_dataset <- analytic_dataset %>%
+  group_by(GRADE_SCHLID, FRESH_COHORT_YEAR) %>%
+  mutate(
+    school_MATH_Z = mean(MATH_Z),
+    school_READ_Z = mean(READ_Z),
+    school_age = mean(age),
+    school_rnoAttend = mean(rnoAttend),
+    school_n_infractions_grade_8 = mean(n_infractions_grade_8),
+    school_rnoCoreGpa = mean(rnoCoreGpa),
+    school_size = n(),
+    school_pbpov = mean(PBPOV)
+  ) %>%
+  ungroup()
+
 
 ### Q? - Class Size Limitations (or still to do)
 

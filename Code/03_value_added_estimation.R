@@ -19,12 +19,14 @@ library(rlist)
 library(plm)
 library(stringr)
 library(gridExtra)
+library(lme4)
+library(lmerTest)
 source("utils.R")
 
 ### 2. Load Analytic Dataset and Set Time Period for Analysis
 analytic_dataset <- read_rds("/home/roymckenzie/Thesis/Output/analytic_dataset.rds")
-first_year <- 2013
-last_year <- 2013
+first_year <- 2010
+last_year <- 2014
 year_list <- seq(first_year, last_year, 1)
 
 ### 3. Estimate the Value Added - Separate by Subject and Year
@@ -33,16 +35,25 @@ controls <- c("MATH_Z", "READ_Z", "cRace", "cGender", "age", "rnoAttend",
               "n_infractions_grade_8", "rnoCoreGpa", "dFreshSped", "PBPOV",
               "class_MATH_Z", "class_READ_Z", "class_age", "class_rnoAttend",
               "class_n_infractions_grade_8", "class_rnoCoreGpa", "class_size",
-              "I(MATH_Z^2)", "I(READ_Z^2)", "I(age^2)", "I(rnoAttend^2)",
+              "I(MATH_Z^2)", "I(READ_Z^2)", "I(rnoAttend^2)",
               "I(n_infractions_grade_8^2)", "I(rnoCoreGpa^2)",
-              "I(MATH_Z^3)", "I(READ_Z^3)", "I(age^3)", "I(rnoAttend^3)",
+              "I(MATH_Z^3)", "I(READ_Z^3)", "I(rnoAttend^3)",
               "I(n_infractions_grade_8^3)", "I(rnoCoreGpa^3)",
-              "I(class_MATH_Z^2)", "I(class_READ_Z^2)", "I(class_age^2)", "I(class_rnoAttend^2)",
+              "I(PBPOV^2)", "I(PBPOV^3)",
+              "I(class_MATH_Z^2)", "I(class_READ_Z^2)", "I(class_rnoAttend^2)",
               "I(class_n_infractions_grade_8^2)", "I(class_rnoCoreGpa^2)",
-              "I(class_MATH_Z^3)", "I(class_READ_Z^3)", "I(class_age^3)", "I(class_rnoAttend^3)",
+              "I(class_MATH_Z^3)", "I(class_READ_Z^3)", "I(class_rnoAttend^3)",
               "I(class_n_infractions_grade_8^3)", "I(class_rnoCoreGpa^3)",
-              "I(class_size^2)", "I(class_size^3)")
+              "school_MATH_Z", "school_READ_Z", "school_age", "school_rnoAttend",
+              "school_n_infractions_grade_8", "school_rnoCoreGpa", "school_size",
+              "I(school_MATH_Z^2)", "I(school_READ_Z^2)", "I(school_rnoAttend^2)",
+              "I(school_n_infractions_grade_8^2)", "I(school_rnoCoreGpa^2)",
+              "I(school_MATH_Z^3)", "I(school_READ_Z^3)", "I(school_rnoAttend^3)",
+              "I(school_n_infractions_grade_8^3)", "I(school_rnoCoreGpa^3)",
+              "class_pbpov", "school_pbpov")
 controls <- paste(controls, collapse = " + ")
+
+## NO school age due to colinearity
 
 #### 3a. Standardize Grade Difference
 analytic_dataset <- analytic_dataset %>%
@@ -102,7 +113,7 @@ for(yr in year_list) {
       select(TID, test_fe)
     
     
-    ### Model 3 - Fixed effects repredicting residuals? ASK PETER
+    ### Model 3 - Fixed effects predicting residuals? ASK PETER
     va_model3_data <- temp_analytic_data %>%
       left_join(
         va_model2_resid, by = c("TID", "SID")
@@ -120,13 +131,19 @@ for(yr in year_list) {
       mutate(va_model3_fe = va_model3_fe - mean(va_model3_fe)) %>%
       select(TID, va_model3_fe) 
     
-    ### Model 4 - Conditional Bayes - TODO
+    ### Model 4 - Conditional Bayes - Adding random teacher/student effects. 
+    va_model4_glm <- lmer(grade_diff_resid ~ (1 | TID),
+                          data = va_model3_data)
+    va_model4_re <- ranef(va_model4_glm)$TID 
+    va_model4_re <- data.frame(TID = rownames(va_model4_re), va_model4_re = va_model4_re$`(Intercept)`, row.names = NULL) %>%
+      mutate(TID = as.numeric(as.character(TID)))
+    
     ### Model 5 - Conditional Bayes, accounting for drift? - TODO
     
     ### Merge Models
     temp <- full_join(va_model1_fe, va_model2_fe, by = "TID") %>%
       full_join(va_model3_fe, by = "TID") %>%
-      full_join(test_fe, by = "TID") %>%
+      full_join(va_model4_re, by = "TID") %>%
       mutate(
         subject = current_sub, 
         FRESH_COHORT_YEAR = yr
@@ -145,12 +162,12 @@ test <- analytic_dataset %>%
 
 g1 <- ggplot(data = va_output[va_output$subject == "Math",]) + 
   geom_density(aes(x = va_model2_fe), color = "red") + 
-  geom_density(aes(x = test_fe), color = "blue") + 
+  geom_density(aes(x = va_model4_re), color = "blue") + 
   xlab("Grade Effect") + 
   labs(title = "Math")
 g2 <- ggplot(data = va_output[va_output$subject == "English",]) + 
   geom_density(aes(x = va_model2_fe), color = "red") + 
-  geom_density(aes(x = test_fe), color = "blue") + 
+  geom_density(aes(x = va_model4_re), color = "blue") + 
   xlab("Grade Effect") + 
   labs(title = "English")
 
@@ -158,3 +175,4 @@ g2 <- ggplot(data = va_output[va_output$subject == "English",]) +
 #ggsave("../Output/Grade_Effect_Density.jpeg", g3)
 
 write_rds(va_output, "../Output/va_output.rds")
+
