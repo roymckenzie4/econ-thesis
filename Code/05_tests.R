@@ -17,6 +17,7 @@ library(dplyr)
 library(lmtest)
 library(janitor)
 library(kableExtra)
+library(knitr)
 library(stringr)
 library(sandwich)
 source("utils.R")
@@ -280,3 +281,15 @@ stargazer(list(testc4, testc1, testc3, testc4_y, testc1_y, testc3_y),
           title = "Checking Balance of Behavioral Controls with Different Sets of Controls")
 
 
+### One More Test
+test_d_data <- va_scores %>% 
+  ungroup() %>%
+  select(TID, subject, FRESH_COHORT_YEAR, va_model4_re) %>%
+  pivot_wider(id_cols = c(TID, subject), names_from = c(FRESH_COHORT_YEAR),
+              values_from = va_model4_re, names_prefix = "", values_fill = NA)
+
+cor(test_d_data[,3:5], use = "pairwise") %>% 
+  kable(format = "latex", booktabs = T, col.names = c("2011", "2012", "2013"), digits = 3, 
+        caption = "Correlation of Estimated Grade Effects Across Years", align = c("ccc")) %>%
+  kable_styling() %>%
+  add_footnote("\\textit{Note:} Constructed using pairwise complete estimates of grade effects for Freshman core course teachers from the 2011-12 to 2013-14 school years.", "none", escape = FALSE)
