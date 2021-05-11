@@ -34,8 +34,7 @@ year_list <- seq(first_year, last_year, 1)
 
 ### Do base Data Cleaning
 fclasses <- read.csv("/home/projects/To_and_Through/DATA/newFcohortsOutput/allFcohorts2020_2_9_21.csv") %>%
-  filter(freshCohort >= first_year & freshCohort <= last_year) %>%
-  filter(gradSchoolTypeNum6yr < 4)
+  filter(freshCohort >= first_year & freshCohort <= last_year) 
   
 
 ### Add Census Data on Poverty

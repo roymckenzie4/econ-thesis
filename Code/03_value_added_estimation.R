@@ -26,7 +26,7 @@ source("utils.R")
 ### 2. Load Analytic Dataset and Set Time Period for Analysis
 analytic_dataset <- read_rds("/home/roymckenzie/Thesis/Output/analytic_dataset.rds")
 first_year <- 2010
-last_year <- 2014
+last_year <- 2013
 year_list <- seq(first_year, last_year, 1)
 
 ### 3. Estimate the Value Added - Separate by Subject and Year
@@ -160,19 +160,19 @@ va_output <- list.rbind(lapply(paste0("va_measures_", year_list), get))
 test <- analytic_dataset %>%
   left_join(va_output, by = c("TID", "subject"))
 
+write_rds(va_output, "../Output/va_output.rds")
+
+va_output <- filter(va_output, FRESH_COHORT_YEAR >= 2011 & FRESH_COHORT_YEAR <= 2013)
 g1 <- ggplot(data = va_output[va_output$subject == "Math",]) + 
-  geom_density(aes(x = va_model2_fe), color = "red") + 
   geom_density(aes(x = va_model4_re), color = "blue") + 
   xlab("Grade Effect") + 
   labs(title = "Math")
 g2 <- ggplot(data = va_output[va_output$subject == "English",]) + 
-  geom_density(aes(x = va_model2_fe), color = "red") + 
   geom_density(aes(x = va_model4_re), color = "blue") + 
   xlab("Grade Effect") + 
   labs(title = "English")
 
-#g3 <- arrangeGrob(g1, g2, nrow = 2)
-#ggsave("../Output/Grade_Effect_Density.jpeg", g3)
+g3 <- arrangeGrob(g1, g2, nrow = 2)
+ggsave("../Output/Grade_Effect_Density.jpeg", g3)
 
-write_rds(va_output, "../Output/va_output.rds")
 

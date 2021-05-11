@@ -143,7 +143,7 @@ dresid <- function(input_dataset, outcome, controls, subjects, year_list) {
       dataset <- input_dataset %>%
         filter(subject == current_sub) %>%
         filter(FRESH_COHORT_YEAR == current_yr) %>%
-        filter(across(.cols = outcome, .fns = ~ !is.na(.x)))
+        filter(!is.na(!!rlang::sym(outcome)))
       resid_reg <- plm(paste0(outcome, " ~ ", controls),
                        index = c("TID", "SID"),
                        model = "within",
@@ -151,10 +151,10 @@ dresid <- function(input_dataset, outcome, controls, subjects, year_list) {
       )
       fixed_effects <- fixef(resid_reg, type = "dmean")
       fixed_effects <- data.frame(TID = as.integer(as.character(names(fixed_effects))), 
-                                  fixed_effects = fixed_effects, row.names = NULL) %>%
+                                  fixed_effects_var = fixed_effects, row.names = NULL) %>%
         mutate(fixed_effects = fixed_effects - mean(fixed_effects))
       
-      residuals <- cbind(residuals = as.vector(resid_reg$residuals),
+      residuals <- cbind(residuals_var = as.vector(resid_reg$residuals),
                          attr(resid_reg$residuals, "index")) %>%
         mutate(
           TID = as.integer(as.character(TID)),
@@ -164,12 +164,13 @@ dresid <- function(input_dataset, outcome, controls, subjects, year_list) {
       
       
       dataset <- dataset %>%
+        ungroup() %>%
         left_join(fixed_effects, by = "TID") %>%
         left_join(
           residuals, by = c("SID", "TID")
         ) %>%
         mutate(
-          dresiduals = residuals + fixed_effects
+          dresiduals = residuals_var + fixed_effects_var
         )
       
       re_glm <- lmer(dresiduals ~ (1 | TID), data = dataset)
