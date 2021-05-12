@@ -36,12 +36,18 @@ theme_set(theme_minimal())
 analytic_cohort <- read_rds("../Output/analytic_cohort.rds") %>%
   mutate(
     analytic = 1
+  ) %>%
+  filter(
+    freshCohort >= 2011 & freshCohort <= 2013
   )
 raw_cohort <- read_rds("../Output/raw_cohort.rds") %>%
   mutate(
     analytic = 0
   )
-analytic_dataset <- read_rds("../Output/analytic_dataset.rds")
+analytic_dataset <- read_rds("../Output/analytic_dataset.rds") %>%
+  filter(
+    FRESH_COHORT_YEAR >= 2011 & FRESH_COHORT_YEAR <= 2013
+  )
 
 ### 3. Comparing Analytic and Raw Cohort
 

@@ -290,6 +290,9 @@ test_d_data <- va_scores %>%
 
 cor(test_d_data[,3:5], use = "pairwise") %>% 
   kable(format = "latex", booktabs = T, col.names = c("2011", "2012", "2013"), digits = 3, 
-        caption = "Correlation of Estimated Grade Effects Across Years", align = c("ccc")) %>%
+        caption = "Correlation of Estimated Grade Effects Across Years\\label{tab:autocorrelation}") %>%
   kable_styling() %>%
-  add_footnote("\\textit{Note:} Constructed using pairwise complete estimates of grade effects for Freshman core course teachers from the 2011-12 to 2013-14 school years.", "none", escape = FALSE)
+  add_footnote("\\textit{Note:} Constructed using pairwise complete estimates of grade effects for Freshman core course teachers from the 2011-12 to 2013-14 school years.", 
+               "none", escape = FALSE) %>%
+  column_spec(2:4, width = "2cm") %>%
+  save_kable("../Output/autocorrelation.tex")
