@@ -137,7 +137,7 @@ temp <- analytic_dataset %>%
 kable(temp, format = "latex", caption = "Grade Variables by Freshman Cohort, Subject\\label{tab:table_freq}", 
       label = "table_freq", booktabs = T, linesep = c("", "", "\\addlinespace", "", "", "", ""),
       escape = F, align = c("cc"), midrule = "\\midrule") %>%
-  add_header_above(c(" " = 1, "2013" = 2)) %>% 
+  add_header_above(c(" " = 1, "2011" = 2, "2012" = 2, "2013" = 2)) %>% 
   save_kable("../Output/table_freq.tex")
 
 ### 4d. Descriptives on Grades
