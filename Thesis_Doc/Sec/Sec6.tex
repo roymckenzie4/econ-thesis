@@ -1,0 +1,21 @@
+\documentclass[../thesis_main.tex]{subfiles}
+\begin{document}
+\doublespacing
+\section{Tests of Assumptions and Robustness}
+\label{section:tests}
+
+As detailed in Section~\ref{section:framework}, our identification argument rests on several key assumptions. Perhaps most importantly are the assumptions of as-good-as-random assignment of freshman and sophomore year teacher characteristics, after controlling for student observables. We test a few of these assumption here:
+
+\subsection{Assumption 3: Random Assignment of Teacher $j(i,t+1)$}
+
+In this section, we primarily wish to test whether the characteristics of student $i$'s assigned teacher period $t$, $j(it)$, determine the characteristics of their assigned teacher in period $t+1$, $j(i,t+1)$. To do this, we run a balance test of observed teacher characterics (such as level of education, certification status, and years of experience) for period $t+1$ teacher on the same value for period $t$ teacher, plus school fixed effects. In other words, we estimate:
+
+\begin{equation}
+	x_{j(i,t+1)} = x_{j(it)} + S_{j(it)} + \varepsilon_{j(it)}
+\end{equation}
+
+where $x_{j(it)}$ represents a given teacher-level characteristic for teacher $j(it)$ and $S_{j(it)}$ represents a school fixed effect for the school where teacher $j(it)$ works. We include school fixed effects so as to remove inherent differences in teacher sorting at the school level across the district. The results of this estimation are given in Table TODO below:
+
+These results show that there does indeed seem to be a strong and significant positive association the characteristics of a student's assigned teacher in period $t$ and period $t+1$. This does not inherently jeapordize our analysis, for two reasons. First, the magnitude of the association is relatively low, indicating that it may not deviate far from random. Secondly, since the correlation is positive, then if the observed characteristics are correlated across years of teaching with similar patterns in grade effect, then this would lead only to an underestimate of teacher grading effects. Thus, estimates of teacher grade effects on later outcomes should still be conservative, leading our conclusions to likely remain valid. 
+
+\end{document}

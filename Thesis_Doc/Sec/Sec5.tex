@@ -1,0 +1,147 @@
+\documentclass[../thesis_main.tex]{subfiles}
+\begin{document}
+\doublespacing
+\section{Results}
+\label{section:results}
+
+\subsection{Correlation Between Teacher Grade Effects and Teacher Impact on Other Outcomes}
+
+To examine the relationship between our previously estimated grading effects and a variety of student educational outcomes, I follow \citet{chettyMeasuringImpactsTeachers2014a}. For each outcome $Y_{it}$, I first residualize the outcome using within-teacher variation and the full vector of controls used to estimate the original grade effects, following an identitical procedure to how we constructed our residualized grade outcome, $Y_{it}^*$. Then, pooling across years, I regress this residualized outcome on the student's teacher's \textit{normalized} grade-effect, $\hat{\nu}_{j(it)}^{std}$.
+\begin{equation}
+	Y_{it}^* = \kappa \hat{\nu}_{j(it)}^{std} + Year_{t} + \varepsilon_{it}
+\end{equation}
+where $Year_{t}$ represents a year fixed effect. 
+
+% TODO: Correct weights. Also - I'm using random effects, but that's WRONG? 
+Since $Y_{it}^*$ was estimated using within-teacher variation, estimating this model at the student level is identical to using weighted OLS to estimate:
+\begin{equation}
+	\gamma_{j(it)} = \kappa \hat{\nu}_{j(it)}^{std} + e_{it}
+	\label{eqn:results}
+\end{equation}
+where $\gamma_{j(it)}$ represents a ``value-added'' measure of teacher $j(it)$ on outcome $Y(it)$, weighting by the number of students a teacher sees. This grants a nice interpretation to our results: the coefficien $\kappa$ actually represents a measure of the average relationship between a teacher's grade effect and their obserbed value-add to the outcome $Y_{it}$. 
+
+We estimate Equation~\ref{eqn:results} for three main types of outcomes, the results of which are presented below.
+
+\subsection*{Freshman Outcomes}
+
+The results in Table~\ref{tab:fresh_out} are presented mostly as demonstration. The first two outcomes, Freshman On Track status and Freshman Core GPA, both are directly linked to Freshman grades, which are of course also included in our model - thus, correlation is structurally guaranteed. 
+
+\input{/Users/roymckenzie/Dropbox/Thesis/ECON/Output/fresh_out.tex}
+
+\begin{figure}
+     \centering
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{/Users/roymckenzie/Dropbox/Thesis/ECON/Output/dFreshOnTrack_scatter.png}
+         \caption{Freshman on Track}
+         \label{fig:dFreshOnTrack}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{/Users/roymckenzie/Dropbox/Thesis/ECON/Output/freshCoreGpa_scatter.png}
+         \caption{Freshman Core GPA}
+         \label{fig:freshCoreGpa}
+     \end{subfigure}\\
+
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{/Users/roymckenzie/Dropbox/Thesis/ECON/Output/pFreshAttendance_scatter.png}
+         \caption{Freshman Attendance}
+         \label{fig:pFreshAttendance}
+     \end{subfigure}
+        \caption{Freshman Year Outcomes}
+        \label{fig:fresh}
+\end{figure}
+
+\subsection*{Course Taking Outcomes}
+
+For the course outcomes, Table~\ref{tab:course_out} displays a significant effect only of English teacher grade effect on the number of AP courses taken after Freshman year. 
+
+\input{/Users/roymckenzie/Dropbox/Thesis/ECON/Output/course_out.tex}
+
+\begin{figure}
+     \centering
+     \begin{subfigure}[b]{0.45\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{/Users/roymckenzie/Dropbox/Thesis/ECON/Output/nAPCourses4yr_scatter.png}
+         \caption{N. AP Courses after Freshman Year}
+         \label{fig:nAPCourses4yr}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.45\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{/Users/roymckenzie/Dropbox/Thesis/ECON/Output/n_honors_after_fresh_scatter.png}
+         \caption{N. Honors Courses after Freshman Year}
+         \label{fig:freshCoreGpa}
+     \end{subfigure}
+      \caption{Course Taking Outcomes}
+      \label{fig:course}
+\end{figure}
+
+\subsection*{Later Academic Outcomes}
+
+Again, in Table~\ref{tab:academic_out}, we see a likely-endogenous effect of teacher grade effect on both core and overall graduating GPA. 
+
+\input{/Users/roymckenzie/Dropbox/Thesis/ECON/Output/academic_out.tex}
+
+\begin{figure}
+     \centering
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{/Users/roymckenzie/Dropbox/Thesis/ECON/Output/gradCumCoreGPA_scatter.png}
+         \caption{College Entrance Exam (ACT Units)}
+         \label{fig:highACT_EQUIV}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{/Users/roymckenzie/Dropbox/Thesis/ECON/Output/gradCumCoreGPA_scatter.png}
+         \caption{Graduating Core GPA}
+         \label{fig:gradCumCoreGPA}
+     \end{subfigure}\\
+
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{/Users/roymckenzie/Dropbox/Thesis/ECON/Output/gradCumOverallGPA_scatter.png}
+         \caption{Graduating Overall GPA}
+         \label{fig:gradCumOverallGPA}
+     \end{subfigure}
+    \caption{Long-Term Academic Outcomes}
+    \label{fig:academic}
+\end{figure}
+
+\subsection*{Post-Secondary Outcomes}
+
+In Table~\ref{tab:long_out} we see a significant impact of Freshman year math teacher grade efect on immediate college enrollment. The magnitude of this effect, however, is so small as to be negligible. 
+
+\input{/Users/roymckenzie/Dropbox/Thesis/ECON/Output/long_out.tex}
+
+\begin{figure}
+     \centering
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{/Users/roymckenzie/Dropbox/Thesis/ECON/Output/dEarnAnyDip4yr_scatter.png}
+         \caption{Graduating HS in 4 Years}
+         \label{fig:dEarnAnyDip4yr}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{/Users/roymckenzie/Dropbox/Thesis/ECON/Output/immEnr_scatter.png}
+         \caption{Immediate College Enrollment}
+         \label{fig:immEnr}
+     \end{subfigure}\\
+
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{/Users/roymckenzie/Dropbox/Thesis/ECON/Output/on_time_graduation_scatter.png}
+         \caption{On Time College Graduation}
+         \label{fig:on_time_graduation}
+     \end{subfigure}
+    \caption{Post-Secondary Outcomes}
+    \label{fig:long}
+\end{figure}
+
+
+\end{document}

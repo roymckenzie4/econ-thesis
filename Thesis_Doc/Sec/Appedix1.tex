@@ -1,0 +1,32 @@
+\documentclass[../thesis_main.tex]{subfiles}
+\begin{document}
+\doublespacing
+\section{Data and Cleaning Procedure}
+\label{appendix:data}
+
+\subsection{Further Description of Student Level Data}
+
+\textit{Demographics.} The dataset contains detailed information on the gender, ethnicity, special education status, and age for all students in our sample. Additionally, as an improvement on traditional measures of poverty such as free and reduced lunch status, this dataset contains poverty rates for the census block in which the student resides, measured as the percent of families in this census block below the povery line.
+
+\textit{Educational Information.} The dataset links students with detailed information regarding their educational trajectory. For each year, we observe the school the student was enrolled in, the grade they were enrolled in, and their state-administered test scores for that year. In addition, upon a student leaving CPS, we record their reason for leaving (that is, graduating, dropping out, etc.). This dataset provides both information for our controls, such as prior achievement, but also long-term high school outcomes, such as ACT scores and other course taking patterns. 
+
+\textit{Post-Secondary Outcomes.} In addition to the CPS level information given above, the base dataset also contains merge information from the National School Clearinghouse, which provides information on the post-secondary outcomes of the CPS students in our sample. This includes the dates and schools of a students higher education enrollments for ten years after high school graduation, as well as the date of college exit and degrees received (if any). This dataset allows us to look at outcomes beyond the high school level. 
+
+\subsection{Further Description of Class Level Data}
+
+\textit{Descriptive.} The dataset includes descriptive information on each class, including the title, level, and course code for each class. This allows for several of the most important controls used in our analysis, and also allows us, by converting course code to subject, to track student outcomes in a single subject over time. 
+
+\textit{Student Performance.} The dataset also contains several measures of student performance and engagement in the class; namely, both mid-semester and final grades, as well as the number of absences accrued by the student in that class that semester. 
+
+\subsection{Data Cleaning Procedure}
+
+We make several restrictions on the overall analytic sample for purpose of this analysis. As a baseline, I require students to have been enrolled in both the year prior to and the year after their freshman year, and to have non-missing values for all controls used in the construction of our model. This stipulates, for example, that the student was in both eighth grade and tenth grade at CPS, and did not transfer in or out of the district. 
+
+%% TODO: is this true? I want it to be, what controls can I add?: While this precludes students who follow a non-traditional educational path, it is required for our estimates of teacher grading effect to hold across the cohort. 
+
+Importantly, I also wish to limit the dataset to one observation per student/subject combination. To do so, I also limit analysis to only the most popular (across CPS) course each student is enrolled in, by subject. This allows us to ensure our analysis is focused on the primary core classes a student taxes in their freshman and sophomore years, and not extraneous/ or support classes. I also limit to classes which have an observed teacher, and are not taught by two or more teachers, so as to be able to identify a unique grading effect for each teacher. 
+
+Beyond these controls, we also implemenet a class size control common in the value-added literature, and limit the percentage of SPED students in the class in order to control for classes which are primarily aimed at unique student needs. On the whole, this gives an analytic sample roughly comparable to the student population at CPS as a whole. 
+
+
+\end{document}

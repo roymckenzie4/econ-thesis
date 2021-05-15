@@ -1,0 +1,24 @@
+\begin{figure}[H]
+\centering
+\begin{subfigure}[b]{0.49\textwidth}
+\centering
+\includegraphics[width=\textwidth]{/Users/roymckenzie/Dropbox/Thesis/ECON/Output/grade_comp_math.png}
+\caption{Math Grades}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.49\textwidth}
+\centering
+\includegraphics[width=\textwidth]{/Users/roymckenzie/Dropbox/Thesis/ECON/Output/grade_comp_eng.png}
+\caption{English Grades}
+\end{subfigure}
+\caption{Relationship Between Freshman and Sophomore Year Grades, by Subject}
+\label{fig:grade_comp}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}[H]
+\centering
+\includegraphics[width=.5\textwidth]{/Users/roymckenzie/Dropbox/Thesis/ECON/Output/Grade_Effect_Density.jpeg}
+\caption{Distribution of Estimated Grade Effects by Subject}
+\label{fig:ge_dist}
+\end{figure}

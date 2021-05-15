@@ -8,51 +8,36 @@
 
 \subsection{Data}
 
-The data for our analysis are drawn from a longitudinal Chicago Public Schools administrative dataset for both students and teachers. The available data extends almost thirty years, but for the time being we focus on freshman cohorts from school year 2013-2014 (with future cohorts to be added in subsequent work), and thus use data from school years 2012-2013 to 2019-2020 in order to include information on both prior-achievement and postsecondary outcomes. This dataset is particularly strong as it provides a near-comprehensive summary of nearly every aspect of the problem under consideration. In particular, we consider three levels of data:
+The data for our analysis are drawn from a longitudinal Chicago Public Schools administrative dataset for both students and teachers. The available data extends almost thirty years, but for the our main analysis I  focus on Freshman cohorts from the 2011-12 school year to the 2013-14 school year, and thus use data from school years 2010-2011 to 2017-18 in order to include information on both prior-achievement and postsecondary outcomes. This dataset is particularly strong as it provides a near-comprehensive summary of nearly every aspect of the problem under consideration. A full description of the data available can be found in Appendix~\ref{appendix:data}, but, in general, I  consider three levels of data:
 
 \subsubsection{1. Student Level} 
 
-The student level dataset contains information on every student enrolled at CPS in the time period under consideration, with one observation per student per year. These data form the base from which we construct and characterize our analytic sample. It contains three main types of data:
-
-\textit{Demographics.} The dataset contains detailed information on the gender, ethnicity, special education status, and age for all students in our sample. Additionally, as an improvement on traditional measures of poverty such as free and reduced lunch status, this dataset contains poverty rates for the census block in which the student resides, measured as the percent of families in this census block below the povery line.
-
-\textit{Educational Information.} The dataset links students with detailed information regarding their educational trajectory. For each year, we observe the school the student was enrolled in, the grade they were enrolled in, and their state-administered test scores for that year. In addition, upon a student leaving CPS, we record their reason for leaving (that is, graduasing, dropping out, etc.). This dataset provides both information for our controls, such as prior achievement, but also long-term high school outcomes, such as ACT scores and other course taking patterns. 
-
-\textit{Post-Secondary Outcomes.} In addition to the CPS level information given above, the base dataset also contains merge information from the National School Clearinghouse, which provides information on the post-secondary outcomes of the CPS students in our sample. This includes the dates and schools of a students higher education enrollments for ten years after high school graduation, as well as the date of college exit and degrees received (if any). This dataset allows us to look at outcomes beyond the high school level. 
-
+The student level dataset contains information on every student enrolled at CPS in the time period under consideration, with one observation per student per year. These data form the base from which I  construct and characterize our analytic sample. It contains both 1) demographic data, consisting of information on a student's background, 2) academic records data, which contains informaiton on student's test scores, graduation stutus, and other markers of a students trajectory, and finally 3) post-secondary data, on student's college enrollment status. Together, this provides a very encompassing picture of student's educational experience at CPS and beyond, which I  use both to provide our controls and some of the long term outcomes for analysis. 
 
 \subsubsection{2. Class Level}
 
-The class level dataset details, for each student, all of the classes which they took in a given semester. The dataset also links students with information on the classes in which they were enrolled each semester. 
-
-\textit{Descriptive.} The dataset includes descriptive information on each class, including the title, level, and coruse code for each class. This allows for several of the most important controls used in our analysis, and also allows us, by converting course code to subject, to track student outcomes in a single subject over time. 
-
-\textit{Student Performance.} The dataset also contains several measures of student performance and engagement in the class; namely, both mid-semester and final grades, as well as the number of absences accrued by the student in that class that semester. We convert the letter grades in this data to a numerical scale following CPS's convention, where an A is equivalen to four points, a B is equivalent to three points, and so on. 
+The class level dataset details, for each student, all of the classes which they took in a given semester. The dataset also links students with information on the classes in which they were enrolled each semester. This provides both descriptive information about the class subject and level. In addition, this dataset provides both a unique teacher ID number for the instructor of the class, as well as information on the letter gradethe student received. Together, these represent the main components necessary for our estimation procedure. I convert the letter grades in this data to a numerical scale following CPS's convention, where an A is equivalent to four points, a B is equivalent to three points, and so on. 
 
 \textit{Teacher Information.} The class level dataset also links each class to the unique teacher ID of the instructor for that course. 
 
 \subsubsection{3. Teacher Level} 
 
-Our final dataset is at the teacher level, containing descriptive and demographic information for each CPS teacher. As mentioned above, this dataset can be linked to the class level dataset by means of the teacher ID. 
+Our final dataset is at the teacher level, containing descriptive and demographic information for each CPS teacher. As mentioned above, this dataset can be linked to the class level dataset by means of the teacher ID. Unfortuantely, this data is only rigorously maintained up to the 2011-12 school year, and so is mainly used for balance tests on years of data prior to our main analysis cohort, as is detailed in Section~\ref{section:tests}.
 
-%%% To add/do(?): For CPS, however, the quality of teacher IDs is less rigorously maintained than that of students IDs. Thus, we employ a fuzzy matching procedure to better link our teacher level data with the corresponding class level data. 
+%%% To add/do(?): For CPS, however, the quality of teacher IDs is less rigorously maintained than that of students IDs. Thus, I  employ a fuzzy matching procedure to better link our teacher level data with the corresponding class level data. 
 
 \subsubsection{Sample Construction}
 
 %% TO ADD: APPENDIX ON SAMPLE CONSTRUCTION AND DECISION RULES
-We construct our sample using the three datasets listed above. As stated above, we limit our analysis to students from the freshman cohorts in school years 2010-2011 to 2013-2014. For the class level dataset, we limit our sample to enrollments in core classes - for now, mathematics and reading, with science and social studies to follow in future analysis. %TODO: add reading, or social studies%.
+I construct our sample using the three datasets listed above. As stated above, I  limit our analysis to students from the freshman cohorts in school years 2010-2011 to 2013-2014. For the class level dataset, I  limit our sample to enrollments in mathematics and English classes. I apply a variety of filters to correct for underlying data in the errors and ensure I  have the data necessary for each teacher in the sample to accurately estimate a grade effect. A full description of this procedure can be found in Appendix~\ref{appendix:data}, but in all, we arrive at an analytic sample consisting of one observation per student/subject pair, recorded over both freshman and sophmore year. 
+
+%TODO: add reading, or social studies%.
 %% TODO: ADD FILTERS FOR NUMBER OF TEACHERS A STUDENT SEES/NUMBER OF STUDENTS A TEACHER SEES? SEE GILRAINE
 
-For the purpose of the analysis, we also require students to have been enrolled in both the year prior to and the year after their freshman year, and to have non-missing values for all controls used in the construction of our model. This stipulates, for example, that the student was in both eigth grade and tenth grade at CPS, and did not transfer in or out of the district. 
-
-%% TODO: is this true? I want it to be, what controls can I add?: While this precludes students who follow a non-traditional educational path, it is required for our estimates of teacher grading effect to hold across the cohort. 
-
-Importantly, we also wish to limit our dataset to one observation per student/subject combination. To do so, we also limit our analysis to dropping all but the most popular (across CPS) course each student is enrolled in. This allows us to ensure our analysis is focused on the primary core classes a student taxes in their freshman and sophmore years, and not extraneous/ or support classes. For more information on this or other decision rules, a full writeup of the cohort selection process can be found in Appendix A. 
-
 %% THIS WILL NEED TO BE CHANGED WHEN WE ADD MORE YEARS, ALSO CHECK LATER AFTER RERUNNING TABLES.
-%% TODO: Add Apendix A table. 
+%% TODO: Add Apendix A table comapring cohort to main years. 
 
-Table~\ref{tab:table_demographics} displays summary statistics for the analytic sample of the demographic variables described above, by freshman cohort. As this table shows, our analytic 2013-14 freshman cohort contains 11,125 observations. Over 80\% of these observations are students of color, which is relatively representative of CPS as a whole. Appendix A also contains a table comparing the full cohort to this analytic sample after all decision rules are put in place. 
+Table~\ref{tab:table_demographics} displays summary statistics for the analytic sample of the demographic variables described above, by freshman cohort. As this table shows, our analytic 2013-14 freshman cohort contains 11,125 observations. Over 80\% of these observations are students of color, which is relatively representative of CPS as a whole.
 
 % TODO: Add real ref label to table, as well as fixing year. Also, should drop missing, soooo... do that. THIS TABLE NEEDS R WORK.
 \input{/Users/roymckenzie/Dropbox/Thesis/ECON/Output/table_demographics.tex}
@@ -60,17 +45,15 @@ Table~\ref{tab:table_demographics} displays summary statistics for the analytic 
 % TODO: add real ref label to table. THIS TABLE NEEDS R WORK. ALSO FIX YEAR. WHY ARE MATH AND READING Z SCORES NOT STANDARDIZED. 
 %% TODO: Add 8th grade GPA?
 
-Similarly, Table~\ref{tab:table_eigth_grade} displays summary statistics for the eigth grade prior achievement variables for our analytic sample. The first two row contain information on the standardized eigth grade math and reading scores for students in our sample. These scores are standardized at the full cohort level to have mean zero and variance one. The fact that the mean scores within our cohort are slightly higher than zero in each case therefore represents a slight positive selection effect of our sample. This same positive bias is widely observed across the literature, and is highlighted in \cite{gilraineMakingTeachingLast2020}. In our case, it likely results from dropping students with missing grade data, who may be in alternative schools or programs and, on the whole, slightly underperforming. A similar bias is observed within the eigth grade attendance, grade, and discipline variables.
+Similarly, Table~\ref{tab:table_eigth_grade} displays summary statistics for the eighth grade prior achievement variables for our analytic sample. The first two row contain information on the standardized eighth grade math and reading scores for students in our sample. These scores are standardized at the full cohort level to have mean zero and variance one. The fact that the mean scores within our cohort are slightly higher than zero in each case therefore represents a slight positive selection effect of our sample. This same positive biasis widely observed across the literature, and is highlighted in \citet{gilraineMakingTeachingLast2020}. In our case, it likely results from dropping students with missing grade data, who may be in alternative schools or programs and, on the whole, slightly under-performing. A similar bias is observed within the eighth grade attendance, grade, and discipline variables.
 
 \input{/Users/roymckenzie/Dropbox/Thesis/ECON/Output/table_eigth_grade.tex}
 
-%%% TODO: Remake this table combining the previous two. 
+Table~\ref{tab:table_freq} displays descriptives on the grades data for the analytic cohort, giving the number of students, teachers, and average grades by subject. In this analytic sample, there are slightly more observations of English grades than mathematics grades, but, within these observations, more unique math teachers than English teachers. I also see that, in this analytic sample, student's English grades are on average slightly higher than math grades, and display a lower standard deviation. This indicates some clustering at the upper end of English grades, while math grades have a more dispersed distribution.
 
-Finally, Table 3 displays descriptives on the grades data for the analytic cohort, giving the number of students, teachers, and average grades by subject. %%% TODO: Insert some summary about this table (upcoming). 
+\input{/Users/roymckenzie/Dropbox/Thesis/ECON/Output/table_freq.tex}
 
-As this table shows, the average numerical difference between freshman and sophmore grades relatively low. Some intuition behind this is given by Figure\ref{fig:grade_comp}. For a given fershman grade, this figure displays the percentage of students in our analytic sample who received each corresponding grade their sophmore year. 
-
-%% TODO: Add interpretation This not only explains the near zero mean given in the previous table, but also gives some logical credence to our model, in that it seems to indicate that, on average, a students grade in a given year is relatively co
+The final row of Table~\ref{tab:table_freq} average numerical difference between freshman and sophomore grades relatively low for both math and English classes, albeit with high variability for each. Some intuition behind this is given by Figure\ref{fig:grade_comp}. For a given freshman grade, this figure displays the percentage of students in our analytic sample who received each corresponding grade their sophomore year. The strong correlation down the diagonal axis represents exactly the same trend as the zero mean in the previous table: students often receive the same grade in their sophomore year class as they did previously in their freshman year class. This figure also shows, however, that this is in no way a guarantee, as there is still large amount of dispersion from this trend, with students both increasing and decreasing their grade between the two years. The proportion of this variability that is unexplained by observed factors is the primary variation used to identify our model. 
 
 \begin{figure}[H]
 	\centering
@@ -85,8 +68,43 @@ As this table shows, the average numerical difference between freshman and sophm
 		\includegraphics[width=\textwidth]{/Users/roymckenzie/Dropbox/Thesis/ECON/Output/grade_comp_eng.png}
 		\caption{English Grades}
 	\end{subfigure}
-	\caption{Relationship Between Freshmen and Sophmore Year Grades, by Subject}
+	\caption{Relationship Between Freshman and Sophomore Year Grades, by Subject}
 	\label{fig:grade_comp}
 \end{figure}
+
+\subsection{Estimation Procedure}
+
+\subsubsection{Estimation Procedure}
+
+To estimate the teacher gradingg effect $\nu_j$ in the data, I  adopt a two-step method commonly used in the teacher value-added literature. First, I  follow \citet{chettyMeasuringImpactsTeachers2014} and remove observable characteristics from our grade outcomes by estimating the following equation using OLS
+\begin{equation}
+	g_{it}-g_{i,t+1} = \alpha_{j(it)} + \beta X_{i,t} + \varepsilon_{e_{it}}
+	\label{eqn:ge_eqn}
+\end{equation}
+where $\alpha_{j(it)}$ represents fixed effects for teacher $j(it)$, the teacher assigned to student $i$ in period $t$. Here, $\beta_{X}$ represents a vector of student-, class-, and school-level, controls including student demographic characteristics and up to cubic terms of prior achievement, as well as classroom level means of these variables. Including the teacher fixed effects ensures that $\beta^*$, the estimate of $\beta$, is identified using only within-teacher variation, ensuring that any unobservable teacher sorting in period $t$ will not result in over-estimates of the magnitude of these grade-effects. 
+
+Estimating the above equation returns the vector $\beta^*$, from which I  can construct a residualized grade difference, $G_{it}^*$, given as
+\begin{equation}
+	G_{it}^* = g_{it}-g_{i,t+1}-\beta^* X_{it}  = \alpha_{j(it)} + \varepsilon_{it}
+\end{equation}
+The variable $G_{it}^*$ represents the grade-difference between freshman and sophomore year for student $i$, net of any difference predicted by observable characteristics. To isolate the componenet of these residuals due to individual teacher effects, I then estimate the above as the following random intercepts model:
+\begin{equation*}
+	\label{eqn:re_eqn}
+	G_{it^{*}} = \nu_{j(it)} +{e_{it}}
+\end{equation*} 
+Here, to construct empirical Bayes estimates of the grade effects, $\hat{\nu_{j(it)}}$, \citet{chettyMeasuringImpactsTeachers2014} use a jack-knifed, leave-year-out method utilizing observations for the same teacher over multiple years to estimate grade effect variance. I instead use a simple best linear unbiased predictor, or BLUP, to construct the empirical Bayes estimates of these grade effects. While I hope, in future work, to further adapt this methodology to use multiple years of teaching data, the amount of teacher turnover in CPS during the years examined, however, makes the BLUP a suitable substitute. 
+%% TODO: Get a better shrinkage thing (use Raudenbush) or find a citation for BLUP or something 
+
+%% TODO: How to get true mean?
+I estimate Equation~\ref{eqn:ge_eqn} and Equation~\ref{eqn:re_eqn} separately by subject and year, and present the plot the distribution of the corresponding grade effects in Figure~\ref{fig:ge_dist} below. These effects are presented in terms of deviation from the mean per-year teacher effect, thus are artificially centered around zero. On average, the grade effects are centered closely around zero, and follow a relatively near normal distribution in shape, as is to be expected when using BLUP. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.7\textwidth]{/Users/roymckenzie/Dropbox/Thesis/ECON/Output/Grade_Effect_Density.jpeg}
+	\caption{Distribution of Estimated Grade Effects by Subject}
+	\label{fig:ge_dist}
+\end{figure}
+
+
 
 \end{document}

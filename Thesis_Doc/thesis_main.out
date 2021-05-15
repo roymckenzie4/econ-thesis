@@ -1,10 +1,20 @@
 \BOOKMARK [1][-]{section.1}{Introduction}{}% 1
-\BOOKMARK [1][-]{section.2}{Relevant Literature}{}% 2
-\BOOKMARK [1][-]{section.3}{Conceptual and Statistical Framework}{}% 3
-\BOOKMARK [2][-]{subsection.3.1}{Teacher Grading Effect Estimation - Theoretical Framework}{section.3}% 4
-\BOOKMARK [1][-]{section.4}{Data and Estimation Procedure}{}% 5
-\BOOKMARK [2][-]{subsection.4.1}{Data}{section.4}% 6
-\BOOKMARK [3][-]{subsubsection.4.1.1}{1. Student Level}{subsection.4.1}% 7
-\BOOKMARK [3][-]{subsubsection.4.1.2}{2. Class Level}{subsection.4.1}% 8
-\BOOKMARK [3][-]{subsubsection.4.1.3}{3. Teacher Level}{subsection.4.1}% 9
-\BOOKMARK [3][-]{subsubsection.4.1.4}{Sample Construction}{subsection.4.1}% 10
+\BOOKMARK [1][-]{section.2}{Conceptual and Framework}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Teacher Grading Effect Estimation - Theoretical Framework}{section.2}% 3
+\BOOKMARK [1][-]{section.3}{Data and Estimation Procedure}{}% 4
+\BOOKMARK [2][-]{subsection.3.1}{Data}{section.3}% 5
+\BOOKMARK [3][-]{subsubsection.3.1.1}{1. Student Level}{subsection.3.1}% 6
+\BOOKMARK [3][-]{subsubsection.3.1.2}{2. Class Level}{subsection.3.1}% 7
+\BOOKMARK [3][-]{subsubsection.3.1.3}{3. Teacher Level}{subsection.3.1}% 8
+\BOOKMARK [3][-]{subsubsection.3.1.4}{Sample Construction}{subsection.3.1}% 9
+\BOOKMARK [2][-]{subsection.3.2}{Estimation Procedure}{section.3}% 10
+\BOOKMARK [3][-]{subsubsection.3.2.1}{Estimation Procedure}{subsection.3.2}% 11
+\BOOKMARK [1][-]{section.4}{Results}{}% 12
+\BOOKMARK [2][-]{subsection.4.1}{Correlation Between Teacher Grade Effects and Teacher Impact on Other Outcomes}{section.4}% 13
+\BOOKMARK [1][-]{section.5}{Tests of Assumptions and Robustness}{}% 14
+\BOOKMARK [2][-]{subsection.5.1}{Assumption 3: Random Assignment of Teacher j\(i,t+1\)}{section.5}% 15
+\BOOKMARK [1][-]{section.6}{Conclusion}{}% 16
+\BOOKMARK [1][-]{appendix.A}{Appendix Data and Cleaning Procedure}{}% 17
+\BOOKMARK [2][-]{subsection.A.1}{Further Description of Student Level Data}{appendix.A}% 18
+\BOOKMARK [2][-]{subsection.A.2}{Further Description of Class Level Data}{appendix.A}% 19
+\BOOKMARK [2][-]{subsection.A.3}{Data Cleaning Procedure}{appendix.A}% 20

@@ -3,13 +3,16 @@
 \usepackage[left=1in, right=1in, top=1in, bottom=1in]{geometry}
 \usepackage{titling}
 \usepackage{amsmath}
+\usepackage{dcolumn}
 \usepackage{fancyhdr}
 \usepackage{setspace}
+\usepackage{pdflscape}
 \usepackage{framed} 
 \pagestyle{fancy}
 \usepackage{amsmath, amsthm, amssymb, amsfonts, mathtools, xfrac, mathrsfs, tikz}
 \usepackage{enumerate}
 \usepackage{graphicx,dsfont, float}
+\usepackage[titletoc]{appendix}
 \usepackage{braket, bm}
 \usepackage{bbold}
 \usepackage{setspace}
@@ -98,8 +101,7 @@ MAY 2021
 \doublespace
 \begin{abstract}
 \thispagestyle{empty}
-This thesis explores how variations in the idiosyncratic grading practices of different teachers could affect long-term student outcomes. Specifically, I attempt to examine the impact on student achievement of holding the quality of instruction constant, but adjusting the process or standards by which the teacher grades; in short, of receiving a “likely-A” versus “likely-B” teacher. I apply a novel identification strategy for individual teacher grading effects unrelated to the process of human capital accumulation. I then estimate these effects using both fixed- and mixed-effect models, using a large, longitudinal dataset of both teachers and students from Chicago Public Schools (CPS).
-
+This thesis explores how variations in the idiosyncratic grading practices of different teachers could affect long-term student outcomes. Specifically, I attempt to examine the impact on student achievement of holding the quality of instruction constant, but adjusting the process or standards by which the teacher grades; in short, of receiving a “likely-A” versus “likely-B” teacher. I apply a novel identification strategy for individual teacher grading effects unrelated to the process of human capital accumulation. I then estimate these effects using both fixed- and mixed-effect models, using a large, longitudinal dataset of both teachers and students from Chicago Public Schools (CPS). I find some evidence that these grade-effects may be linked to later course taking patterns, but in general the results of this estimation show that the non-persistent components of these grades are not significantly linked to later student outcomes. 
 \end{abstract}
 
 \newpage
@@ -112,11 +114,29 @@ This thesis explores how variations in the idiosyncratic grading practices of di
 \subfile{Sec/Sec3}
 % Section 4
 \subfile{Sec/Sec4}
+% Section 5
+\subfile{Sec/Sec5}
+% Section 6
+\subfile{Sec/Sec6}
+% Section 7
+\subfile{Sec/Sec7}
 
 
 \newpage 
 
 \printbibliography
+
+\newpage
+
+\titleformat{\section}
+  {\large\center\bfseries}{Appendix \thesection.}{.5em}{}
+\titlespacing{\section}{0em}{.5em}{.5em}
+
+\begin{appendices}
+\appendix
+\subfile{Sec/Appedix1}
+
+\end{appendices}
 
 
 \end{document}
