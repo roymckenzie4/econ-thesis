@@ -179,9 +179,11 @@ for(i in 1:4) {
 
     }
     
+    breaks <- quantile(plot_data$va_model4_re_std, probs = seq(0, 1, .05))
+    
     plot <- ggplot() + 
-      stat_summary_bin(data = plot_data,
-                       fun = "mean", bins = 20, 
+      stat_summary_bin(data = plot_data, 
+                       fun = "mean", breaks = breaks,  
                        aes(x = va_model4_re_std, 
                            y = dresiduals, color = subject)) + 
       xlab("Teacher Grade Effect") + 
