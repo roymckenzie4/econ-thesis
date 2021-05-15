@@ -20,8 +20,8 @@ library(eeptools)
 source("utils.R")
 
 ### 2. Set Time Period for Analysis
-first_year <- 2010
-last_year <- 2014
+first_year <- 2011
+last_year <- 2013
 year_list <- seq(first_year, last_year, 1)
 
 ### 3. Import Data
@@ -84,7 +84,8 @@ grades <- raw_grades %>%
     #GPA = ifelse(LEVEL == "H" & (GPA > 1), GPA + 1, GPA)
   ) %>%
   # Limit to unique observations
-  distinct(.keep_all = TRUE)
+  distinct(.keep_all = TRUE) %>%
+  filter(!is.na(GPA))
 
 ### Step 3. Deal with Classes with Multiple/Missing Teachers
 ### Decision Rules:
