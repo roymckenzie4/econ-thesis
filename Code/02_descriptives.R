@@ -70,7 +70,9 @@ temp <- analytic_cohort %>%
   mutate(
     PBPOV = 100*PBPOV,
     age = as.numeric(as.character(age))
-  )
+  ) 
+
+levels(temp$cRace)[levels(temp$cRace) == "Unknown Race/Ethnicity"] <- "Other"
 
 sink("../Output/table_demographics.tex", type = c("output"))
 temp_table <- tbl_summary(temp, sort = list(everything() ~ "frequency"),

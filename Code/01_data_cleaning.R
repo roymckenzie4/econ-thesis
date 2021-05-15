@@ -34,11 +34,7 @@ year_list <- seq(first_year, last_year, 1)
 
 ### Do base Data Cleaning
 fclasses <- read.csv("/home/projects/To_and_Through/DATA/newFcohortsOutput/allFcohorts2020_2_9_21.csv") %>%
-  filter(freshCohort >= first_year & freshCohort <= last_year) %>%
-  mutate(
-    cRace = ifelse(cRace == "Unknown Race/Ethnicity", "Other", cRace)
-  )
-  
+  filter(freshCohort >= first_year & freshCohort <= last_year) 
 
 ### Add Census Data on Poverty
 census_data <- read_sas("/mnt/data/demographics/census/censb12.sas7bdat") %>%
