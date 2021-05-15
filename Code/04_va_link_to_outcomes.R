@@ -32,11 +32,14 @@ year_list <- seq(first_year, last_year, 1)
 analytic_dataset <- read_rds("../Output/analytic_dataset.rds") %>%
   filter(
     subject == "Math" | subject == "English"
-  )
+  ) 
+
 analytic_cohort <- read_rds("../Output/analytic_cohort.rds") %>%
   filter(SID %in% analytic_dataset$SID)
 va_scores <- read_rds("../Output/va_output.rds") %>%
   filter(FRESH_COHORT_YEAR %in% year_list)
+
+
 
 ### 3. Merge Selected VA Score with Analytic Cohort
 gclasses_outcomes <- read.csv("/home/projects/To_and_Through/Projects/MakeGraduatingClasses/Output/outcomes_210105.csv")
@@ -60,7 +63,9 @@ analytic_dataset <- left_join(analytic_dataset, va_scores, by = c("TID", "subjec
   mutate(
     immEnr = dImm2yr + dImm4yr,
     on_time_graduation = dEarn2in3 + dEarn4in4
-  )
+  ) %>%
+  filter(FRESH_COHORT_YEAR >= first_year & FRESH_COHORT_YEAR <= last_year) %>%
+  ungroup()
 
 ### 4. Run Analysis
 outcome_sets <- list(
@@ -121,7 +126,7 @@ for(i in 1:4) {
   se <- list()
   
   for(outcome in outcomes) {
-    outcome_scores <- dresid(analytic_dataset, outcome, controls, subjects, year_list)
+    resid_data <- dresid(analytic_dataset, outcome, controls, subjects, year_list) 
     plot_data <- data.frame()
 
     ### Indep. Var 1 - Grade Effect (in each subject)
@@ -130,36 +135,55 @@ for(i in 1:4) {
     ### Q: Which Standard Errors/Clustering to Use
     for(current_sub in subjects) {
       means <- c(means, round(mean(analytic_dataset[analytic_dataset$subject == current_sub,][[outcome]], na.rm = TRUE), 3))
-      va_scores_sub <- va_scores %>%
+      temp_data <- resid_data %>%
         filter(subject == current_sub) %>%
         mutate(
-          va_model4_re_std = (va_model4_re - mean(va_model4_re)) / sd(va_model4_re)
-        )
+          va_model4_re_std = (va_model4_re - mean(va_model4_re))/sd(va_model4_re)
+        ) %>%
+        select(-!!outcome) %>%
+        rename(!!outcome := dresiduals)
+      #va_scores_sub <- va_scores %>%
+      #  filter(subject == current_sub) %>%
+      #  mutate(
+      #    va_model4_re_std = (va_model4_re - mean(va_model4_re)) / sd(va_model4_re)
+      #  )
       
-      temp_data <- left_join(va_scores_sub, outcome_scores, by = c("TID", "FRESH_COHORT_YEAR", "subject")) %>%
-        left_join(weights, by = c("TID", "FRESH_COHORT_YEAR", "subject")) %>%
-        rename(!!outcome := re)
-      formula <- paste0(outcome, " ~ va_model4_re + factor(FRESH_COHORT_YEAR)")
-      reg1 <- lm(formula, data = temp_data, weights = n)
+      #temp_data <- left_join(va_scores_sub, outcome_scores, by = c("TID", "FRESH_COHORT_YEAR", "subject")) %>%
+      #  left_join(weights, by = c("TID", "FRESH_COHORT_YEAR", "subject")) %>%
+      #  rename(!!outcome := re)
+      
+      
+      formula <- paste0(outcome, " ~ va_model4_re_std + factor(FRESH_COHORT_YEAR)")
+      reg1 <- lm(formula, data = temp_data)
       test <- coeftest(reg1, sandwich::vcovHC(reg1, type = "HC1"))[,2]
       models <- list.append(models, reg1)
       se <- list.append(se, test)
 
-      analytic_dataset_temp  <- analytic_dataset %>% 
-        ungroup() %>%
-        inner_join(va_scores_sub, by = c("TID", "FRESH_COHORT_YEAR", "subject")) %>%
-        inner_join(outcome_scores, by = c("TID", "FRESH_COHORT_YEAR", "subject")) %>%
+      #analytic_dataset_temp  <- analytic_dataset %>% 
+      #  ungroup() %>%
+      #  inner_join(va_scores_sub, by = c("TID", "FRESH_COHORT_YEAR", "subject")) %>%
+      #  inner_join(outcome_scores, by = c("TID", "FRESH_COHORT_YEAR", "subject")) %>%
+      #  mutate(
+      #    re = re + mean(!!as.name(outcome), na.rm = TRUE),
+      #  )
+      analytic_dataset_temp <- resid_data %>%
         mutate(
-          re = re + mean(!!as.name(outcome), na.rm = TRUE),
+          dresiduals = dresiduals + mean(!!as.name(outcome), na.rm = TRUE)
+        ) %>% 
+        group_by(subject) %>%
+        mutate(
+          va_model4_re_std = (va_model4_re - mean(va_model4_re, na.rm = TRUE))/sd(va_model4_re, na.rm = TRUE)
         )
-      plot_data <- rbind(plot_data, analytic_dataset_temp)
+      plot_data <- rbind(analytic_dataset_temp, analytic_dataset_temp)
+      
+
     }
     
     plot <- ggplot() + 
       stat_summary_bin(data = plot_data,
                        fun = "mean", bins = 20, 
                        aes(x = va_model4_re_std, 
-                           y = re, color = subject)) + 
+                           y = dresiduals, color = subject)) + 
       xlab("Teacher Grade Effect") + 
       ylab(outcome_names[[i]][which(outcomes == outcome)]) + 
       labs(color = "Subject")

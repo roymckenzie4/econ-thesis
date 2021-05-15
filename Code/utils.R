@@ -173,19 +173,19 @@ dresid <- function(input_dataset, outcome, controls, subjects, year_list) {
           dresiduals = residuals_var + fixed_effects_var
         )
       
-      re_glm <- lmer(dresiduals ~ (1 | TID), data = dataset)
-      re <- ranef(re_glm)$TID 
-      re <- data.frame(TID = rownames(re), re = re$`(Intercept)`, row.names = NULL) %>%
-        mutate(TID = as.numeric(as.character(TID)))
+      #re_glm <- lmer(dresiduals ~ (1 | TID), data = dataset)
+      #re <- ranef(re_glm)$TID 
+      #re <- data.frame(TID = rownames(re), re = re$`(Intercept)`, row.names = NULL) %>%
+      #  mutate(TID = as.numeric(as.character(TID)))
       
-      effects <- fixed_effects %>%
-        left_join(re, by = "TID") %>%
-        mutate(
-          subject = current_sub,
-          FRESH_COHORT_YEAR = current_yr
-        )
+      #effects <- fixed_effects %>%
+      #  left_join(re, by = "TID") %>%
+      #  mutate(
+      #    subject = current_sub,
+      #    FRESH_COHORT_YEAR = current_yr
+      #  )
       
-      return_data <- rbind(return_data, effects)
+      return_data <- rbind(return_data, dataset)
     }
   }
   return(return_data)

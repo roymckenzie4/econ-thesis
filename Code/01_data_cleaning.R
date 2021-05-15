@@ -20,8 +20,8 @@ library(eeptools)
 source("utils.R")
 
 ### 2. Set Time Period for Analysis
-first_year <- 2011
-last_year <- 2013
+first_year <- 2010
+last_year <- 2014
 year_list <- seq(first_year, last_year, 1)
 
 ### 3. Import Data
@@ -34,7 +34,10 @@ year_list <- seq(first_year, last_year, 1)
 
 ### Do base Data Cleaning
 fclasses <- read.csv("/home/projects/To_and_Through/DATA/newFcohortsOutput/allFcohorts2020_2_9_21.csv") %>%
-  filter(freshCohort >= first_year & freshCohort <= last_year) 
+  filter(freshCohort >= first_year & freshCohort <= last_year) %>%
+  mutate(
+    cRace = ifelse(cRace == "Unknown Race/Ethnicity", "Other", cRace)
+  )
   
 
 ### Add Census Data on Poverty
@@ -227,7 +230,7 @@ for(yr in year_list) {
 ### 3e. Other Masterfile Info: Birthdates
 ### Load birthdate date
 ### Get age at September 1st of each year in study
-birthday_data <- read_sas("/mnt/data/masterfile_data/allm520_prelim.sas7bdat", col_select = c("SID", "BDATE520")) %>%
+birthday_data <- read_sas("/mnt/data/masterfile_data/allm520.sas7bdat", col_select = c("SID", "BDATE520")) %>%
   mutate(
     BDATE520 = as.character(BDATE520),
     birthdate1 = ifelse(str_length(BDATE520) == 5, 
