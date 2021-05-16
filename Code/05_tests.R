@@ -359,6 +359,7 @@ stargazer(list(test_e_model_1, test_e_model_2),
           notes = c("Levels are coded as 1 (Honors/AP) or  0 (Regular)). Students are coded as",
                     "having a lower level sophmore class if, for example, they switch from an",
                     "honors class in their freshman year vs a regular class in their sophmore year.",
+                    "Levels compared to a baseline of regular.",
                     "Calculated using freshmen cohorts from 2011-12 to 2013-14 school years.",
                     "Heteroskedasticity robust standard errors are used."), 
           title = "Effect of Class Level on Estimated Grade Effects")
