@@ -23,7 +23,7 @@ library(sandwich)
 source("utils.R")
 
 first_year <- 2010
-last_year <- 2010
+last_year <- 2013
 year_list <- seq(first_year, last_year, 1)
 
 ### 2. Load Data
@@ -296,3 +296,71 @@ cor(test_d_data[,3:5], use = "pairwise") %>%
                "none", escape = FALSE) %>%
   column_spec(2:4, width = "2cm") %>%
   save_kable("../Output/autocorrelation.tex")
+
+
+### Predicting VA By Class charateristics
+
+test_e_data <- analytic_dataset %>%
+  inner_join(va_scores, by = c("TID", "subject", "FRESH_COHORT_YEAR")) %>%
+  filter(FRESH_COHORT_YEAR >= 2011 & FRESH_COHORT_YEAR <= 2013) %>%
+  mutate(
+    diff_grade_level = ifelse(FRESH_SPRING_LEVEL == "R" & (SOPH_FALL_LEVEL == "H" | SOPH_FALL_LEVEL == "A"),
+                              1, ifelse((FRESH_SPRING_LEVEL == "A" | FRESH_SPRING_LEVEL == "H") & SOPH_FALL_LEVEL == "R",
+                                        -1, 0))
+
+  ) %>%
+  filter(SOPH_FALL_LEVEL != "0") %>%
+  filter(SOPH_FALL_LEVEL != "N") %>%
+  filter(FRESH_SPRING_LEVEL != "N") %>%
+  mutate(
+    SOPH_FALL_LEVEL = relevel(factor(SOPH_FALL_LEVEL), ref = "R"),
+    FRESH_SPRING_LEVEL = relevel(factor(FRESH_SPRING_LEVEL), ref = "R"),
+    diff_grade_level = factor(diff_grade_level),
+    diff_grade_level = relevel(diff_grade_level, ref = "0")
+  )
+
+levels(test_e_data$diff_grade_level) <- c("Same", "Easier", "Harder")
+levels(test_e_data$FRESH_SPRING_LEVEL) <- c("Regular", "Honors")
+levels(test_e_data$SOPH_FALL_LEVEL) <- c("Regular", "AP", "Honors")
+
+
+test_e_model_1 <- lm(va_model4_re ~ diff_grade_level  + subject + factor(FRESH_COHORT_YEAR), 
+                   data = test_e_data)
+test_e_test_1 <- coeftest(test_e_model_1, sandwich::vcovHC(test_e_model, type = "HC1"))[,2]
+
+test_e_model_2 <- lm(va_model4_re ~ FRESH_SPRING_LEVEL + SOPH_FALL_LEVEL + FRESH_SPRING_LEVEL * SOPH_FALL_LEVEL + 
+                       subject + factor(FRESH_COHORT_YEAR), data = test_e_data)
+
+test_e_test_2 <- coeftest(test_e_model_2, sandwich::vcovHC(test_e_model_2, type = "HC1"))[,2]
+
+
+stargazer(list(test_e_model_1, test_e_model_2), 
+          type = "latex",
+          se = list(test_e_test_1, test_e_test_2),
+          keep = c("FRESH_SPRING_LEVEL", "SOPH_FALL_LEVEL", "diff_grade_level"),
+          model.numbers = FALSE,
+          dep.var.labels = c("Estimated Grade Effect"),
+          style = "aer",
+          omit = c("subject", "FRESH_COHORT_YEAR"), 
+          omit.labels = c("Subject Fixed Effects?", 
+                          "Year Fixed Effects??"), 
+          keep.stat = c("n"),
+          font.size = "scriptsize",
+          digits = 3,
+          notes.align = "r",
+          align = T,
+          column.sep.width = "-6pt",
+          out = "../Output/test_level.tex",
+          label = "tab:test_level",
+          covariate.labels = c("Lower Level Sophmore Class", "Higher Level Sophmore Class", 
+                               "Freshman Class Level - Honors", "Sophmore Class Level - AP",
+                               "Sophmore Class Level - Honors", "Freshman Honors to Sophmore AP", 
+                               "Freshman Honors to Sophmore Honors"),
+          notes = c("Levels are coded as 1 (Honors/AP) or  0 (Regular)). Students are coded as",
+                    "having a lower level sophmore class if, for example, they switch from an",
+                    "honors class in their freshman year vs a regular class in their sophmore year.",
+                    "Calculated using freshmen cohorts from 2011-12 to 2013-14 school years.",
+                    "Heteroskedasticity robust standard errors are used."), 
+          title = "Effect of Class Level on Estimated Grade Effects")
+
+test_e_model_2 <- lm(SOPH_FALL_GPA ~ va_model4_re, test_e_data)

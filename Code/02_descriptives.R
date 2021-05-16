@@ -213,3 +213,5 @@ g2 <- ggplot(temp, aes(FRESH_SPRING_FMK, SOPH_FALL_FMK)) +
   scale_y_discrete(position = "right", limits = rev(levels(temp$SOPH_FALL_FMK))) +
   theme(legend.position = "none")
 ggsave("../Output/grade_comp_eng.png", plot = g2)
+
+

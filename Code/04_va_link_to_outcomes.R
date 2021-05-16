@@ -52,13 +52,13 @@ analytic_dataset <- left_join(analytic_dataset, va_scores, by = c("TID", "subjec
   left_join(gclasses_outcomes_clean, by = "SID") %>%
   mutate(
     diff_grade_level = ifelse(FRESH_SPRING_LEVEL == "R" & (SOPH_FALL_LEVEL == "H" | SOPH_FALL_LEVEL == "A"),
-                              1, ifelse((FRESH_SPRING_LEVEL == "A" | FRESH_SPRING_LEVEL == "H") & SOPH_FALL_LEVEL == "H",
+                              1, ifelse((FRESH_SPRING_LEVEL == "A" | FRESH_SPRING_LEVEL == "H") & SOPH_FALL_LEVEL == "R",
                                         -1, 0))
   ) %>%
   group_by(SID) %>%
   mutate(
-    n_ap_after_fresh = nAPCourses4yr - sum(FRESH_SPRING_LEVEL == "A"),
-    n_honors_after_fresh = nHonorsCourses4yr - sum(FRESH_SPRING_LEVEL == "H")
+    n_ap_after_fresh = nAPCourses4yr - sum(FRESH_SPRING_LEVEL == "A") - sum(SOPH_FALL_LEVEL == "A"),
+    n_honors_after_fresh = nHonorsCourses4yr - sum(FRESH_SPRING_LEVEL == "H") - sum(SOPH_FALL_LEVEL == "H"),
   ) %>%
   mutate(
     immEnr = dImm2yr + dImm4yr,
@@ -75,8 +75,8 @@ outcome_sets <- list(
   c("dEarnAnyDip4yr", "immEnr", "on_time_graduation")
 )
 outcome_names <- list(
-  c("Freshman On Track", "Freshman Core GPA", "Freshman Attendance"),
-  c("N. AP Courses After Freshman Year", "N. Honors Courses After Freshman Year"), 
+  c("Freshman On-Track", "Freshman Core GPA", "Freshman Attendance"),
+  c("N. AP Courses as Upperclassman", "N. Honors Courses as Upperclassman"), 
   c("ACT/SAT Score (ACT Scale)", "Graduating Core GPA", "Graduating Overall GPA"),
   c("Graduate HS in 4 Years", "Immediately Enrolled in College", "On Time College Graduation")
 )
@@ -137,9 +137,11 @@ for(i in 1:4) {
       means <- c(means, round(mean(analytic_dataset[analytic_dataset$subject == current_sub,][[outcome]], na.rm = TRUE), 3))
       temp_data <- resid_data %>%
         filter(subject == current_sub) %>%
+        group_by(FRESH_COHORT_YEAR) %>%
         mutate(
           va_model4_re_std = (va_model4_re - mean(va_model4_re))/sd(va_model4_re)
         ) %>%
+        ungroup() %>%
         select(-!!outcome) %>%
         rename(!!outcome := dresiduals)
       #va_scores_sub <- va_scores %>%
@@ -207,7 +209,7 @@ for(i in 1:4) {
                       "standard errors are used"),
             font.size = "scriptsize", add.lines = list(means), 
             label = paste0("tab:", file_names[i]),
-            out = paste0("../Output/", file_names[i], ".tex"), 
+            out = paste0("../Output/", file_names[i], ".tex"),
             digits = 3, align = T)
 }
 
